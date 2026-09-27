@@ -22,13 +22,13 @@ h2{margin:10px 0}.heroCopy h2{font-size:clamp(2.2rem,5vw,4.2rem);line-height:.95
 .board{display:grid;grid-template-columns:1fr 1fr;gap:14px}.pane{position:relative;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#eef4f6}.label{position:absolute;z-index:3;top:12px;left:12px;background:#12324ae8;color:#fff;border-radius:999px;padding:7px 10px;font-size:.76rem;font-weight:800}
 .sceneimg{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}.hits{position:absolute;inset:0}.hit{position:absolute;transform:translate(-50%,-50%);width:11%;height:14%;min-width:44px;min-height:44px;border:0;border-radius:50%;background:transparent}.hit:after{content:"";position:absolute;inset:8%;border:3px solid transparent;border-radius:50%}.hit.found:after{border-color:#fff;background:#287a5255;box-shadow:0 0 0 4px #287a52d9}
 .toast{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:#132b3c;color:#fff;padding:9px 12px;border-radius:9px;font-weight:700;opacity:0;transition:.18s;z-index:6}.toast.show{opacity:1}
-.footer{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:14px;color:var(--muted)}.btn{border:0;border-radius:9px;padding:11px 15px;font-weight:800}.primary{background:var(--blue);color:#fff}.secondary{background:#edf3f5;color:var(--navy)}
+.hintbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.hintbtn{border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:9px;padding:10px 13px;font-weight:800}.hintbtn:disabled{opacity:.48;cursor:default}.hintmsg{margin-top:10px;min-height:24px;padding:10px 12px;border-radius:9px;background:#f4f8fa;color:#334651;font-size:.92rem;line-height:1.4}.footer{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:14px;color:var(--muted)}.btn{border:0;border-radius:9px;padding:11px 15px;font-weight:800}.primary{background:var(--blue);color:#fff}.secondary{background:#edf3f5;color:var(--navy)}
 .results{display:grid;grid-template-columns:.9fr 1.1fr;gap:20px}.panel{border:1px solid var(--line);border-radius:16px;padding:24px;background:#fff}.bigtime{font-size:3.5rem;font-weight:900;color:var(--navy);line-height:1;margin:12px 0}
 .entry{display:flex;gap:8px;margin-top:16px}.entry input{flex:1;min-width:0;border:1px solid var(--line);border-radius:8px;padding:11px;font-size:16px}
 .risks{display:grid;gap:8px;margin-top:16px}.risk{display:flex;gap:10px;padding:10px;background:#f7fafb;border-radius:9px}.dot{width:22px;height:22px;border-radius:50%;background:var(--good);color:#fff;display:grid;place-items:center;flex:0 0 auto;font-weight:900}.small{font-size:.82rem;color:var(--muted);line-height:1.45}
 .tabs{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}.tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 10px}.tab.active{background:var(--navy);color:#fff}.table{width:100%;border-collapse:collapse}.table th,.table td{text-align:left;border-bottom:1px solid #edf1f3;padding:9px 7px}.table th{font-size:.7rem;color:var(--muted);text-transform:uppercase}.empty{padding:24px;text-align:center;color:var(--muted)}
 .modal{position:fixed;inset:0;background:#071620aa;display:none;align-items:center;justify-content:center;padding:20px;z-index:20}.modal.open{display:flex}.modalBox{background:#fff;border-radius:16px;padding:24px;max-width:800px;width:100%}
-@media(max-width:900px){main{padding:18px}.hero,.results,.board,.grid{grid-template-columns:1fr}.gameHead,.footer{align-items:flex-start;flex-direction:column}.thumb{height:140px}}
+@media(max-width:900px){main{padding:18px}.hero,.results,.board,.grid{grid-template-columns:1fr}.gameHead,.footer{align-items:flex-start;flex-direction:column}.card,.cardBody{min-height:190px}}
 </style>
 </head>
 <body>
@@ -41,17 +41,17 @@ h2{margin:10px 0}.heroCopy h2{font-size:clamp(2.2rem,5vw,4.2rem);line-height:.95
 <section id="sHome" class="screen active">
 <div class="hero">
 <div class="heroCopy"><div class="eyebrow">League Insurance Risk Lab</div><h2>Spot the Risk</h2><p>Two scenes look almost identical. One contains eight municipal risk issues. Find every difference as fast as you can and see where you rank today.</p></div>
-<div class="how"><h3>How to play</h3><ol><li>Choose a municipal setting.</li><li>The clock starts when the scene appears.</li><li>Tap risks in the <strong>Riskier Scene</strong>.</li><li>Find all eight to stop the clock.</li></ol><p class="small">Each difference represents an exposure that can contribute to injury, loss, disruption, or a claim.</p></div>
+<div class="how"><h3>How to play</h3><ol><li>Choose a municipal setting.</li><li>The clock starts when the scene appears.</li><li>Tap the differences you spot in <strong>Scene 2</strong>.</li><li>Find all eight risks to stop the clock.</li></ol><p class="small">Each difference represents an exposure that can contribute to injury, loss, disruption, or a claim.</p></div>
 </div>
 <div class="grid" id="sceneGrid"></div>
 </section>
 <section id="sGame" class="screen">
-<div class="gameHead"><div><h2 id="gameTitle"></h2><p>Find all eight differences in the Riskier Scene.</p></div><div class="stats"><div class="stat"><b id="timer">0.00</b><span>seconds</span></div><div class="stat"><b id="count">0 / 8</b><span>risks found</span></div></div></div>
+<div class="gameHead"><div><h2 id="gameTitle"></h2><p>Find 8 risks. Tap the differences you spot in Scene 2.</p></div><div class="stats"><div class="stat"><b id="timer">0.00</b><span>seconds</span></div><div class="stat"><b id="count">0 / 8</b><span>risks found</span></div></div></div>
 <div class="progress"><div id="bar"></div></div>
 <div style="position:relative">
 <div class="board">
-<div class="pane"><div class="label">Safer Scene</div><img id="safe" class="sceneimg" alt="Safer municipal scene"></div>
-<div class="pane"><div class="label">Riskier Scene • Tap here</div><img id="risky" class="sceneimg" alt="Riskier municipal scene"><div class="hits" id="hits"></div></div>
+<div class="pane"><div class="label">Scene 1</div><img id="safe" class="sceneimg" alt="Municipal scene 1"></div>
+<div class="pane"><div class="label">Scene 2 • Tap here</div><img id="risky" class="sceneimg" alt="Municipal scene 2"><div class="hits" id="hits"></div></div>
 </div><div class="toast" id="toast"></div>
 </div>
 <div class="footer"><div>Look for changes in access, walking surfaces, equipment, storage, people, and work practices.</div><button class="btn secondary" id="restart">Restart scene</button></div>
@@ -95,6 +95,39 @@ var scenes={
  ["Unsecured event setup","A tent and event area should be fully secured and organized.",24.6,48.3],
  ["Cluttered utility staging area","Poor staging around the service truck can obstruct operations and public safety.",75.0,49.6]]}
 };
+var hintSets={
+ cityhall:[
+  "Look near the left side of the reception desk, close to the floor.",
+  "One difference involves who is allowed behind the front counter.",
+  "Check the papers and technology on top of the reception desk.",
+  "Look closely at the filing cabinet on the right.",
+  "Something near the entrance could make it harder to get through.",
+  "Scan the open floor between the desk and waiting area.",
+  "Look at the floor near the right side of the lobby.",
+  "There is more than one electrical or cable-related issue."
+ ],
+ publicworks:[
+  "Compare what the workers are wearing in both scenes.",
+  "Look directly underneath and in front of the truck.",
+  "Check access to emergency equipment behind the truck.",
+  "Look high on the storage shelves.",
+  "Inspect the yellow storage cabinet.",
+  "Look at how the ladder is positioned.",
+  "Compare the worker at the right-side bench.",
+  "Scan the floor from the workbench toward the center of the bay."
+ ],
+ park:[
+  "Look along the left edge of the event setup.",
+  "Check the ground around and under the blue-covered tables.",
+  "Look for equipment that should be closed or secured.",
+  "Scan the grass for small loose items.",
+  "Follow the curved pedestrian path in the foreground.",
+  "Inspect the playground equipment carefully.",
+  "Look at how the tent and event area are set up.",
+  "Check the staging area around the utility truck."
+ ]
+};
+var usedHints=new Set();
 var current=null,found=new Set(),start=0,elapsed=0,raf=0,filter="all";
 function $(q){return document.querySelector(q)}
 function show(id){document.querySelectorAll(".screen").forEach(function(x){x.classList.remove("active")});$(id).classList.add("active");window.scrollTo(0,0)}
@@ -115,7 +148,7 @@ function draw(k){
    $("#hits").appendChild(b);
  });
 }
-function startScene(k){cancelAnimationFrame(raf);current=k;found=new Set();elapsed=0;$("#gameTitle").textContent=scenes[k].name;$("#timer").textContent="0.00";$("#count").textContent="0 / 8";$("#bar").style.width="0";draw(k);show("#sGame");start=performance.now();tick()}
+function startScene(k){cancelAnimationFrame(raf);current=k;found=new Set();usedHints=new Set();elapsed=0;$("#gameTitle").textContent=scenes[k].name;$("#timer").textContent="0.00";$("#count").textContent="0 / 8";$("#bar").style.width="0";document.querySelectorAll(".hintbtn").forEach(function(b){b.disabled=false});$("#hintMsg").textContent="Need a clue? You have three hints for this round.";draw(k);show("#sGame");start=performance.now();tick()}
 function tick(){elapsed=(performance.now()-start)/1000;$("#timer").textContent=elapsed.toFixed(2);raf=requestAnimationFrame(tick)}
 var tt=0;function toast(t){$("#toast").textContent=t;$("#toast").classList.add("show");clearTimeout(tt);tt=setTimeout(function(){$("#toast").classList.remove("show")},900)}
 function hit(i,b){if(found.has(i))return;found.add(i);b.classList.add("found");toast(scenes[current].risks[i][0]);$("#count").textContent=found.size+" / 8";$("#bar").style.width=(found.size/8*100)+"%";if(found.size===8){cancelAnimationFrame(raf);elapsed=(performance.now()-start)/1000;setTimeout(results,350)}}
@@ -123,6 +156,20 @@ function results(){show("#sResult");$("#resultTitle").textContent="You spotted a
 function key(){return"leagueSpotRiskScores_v1"}function day(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function scores(){try{return JSON.parse(localStorage.getItem(key())||"[]")}catch(e){return[]}}
 function esc(v){return String(v).replace(/[&<>'"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]})}
+function useHint(button){
+ var candidates=[];
+ scenes[current].risks.forEach(function(r,i){if(!found.has(i)&&!usedHints.has(i))candidates.push(i)});
+ if(!candidates.length){
+   $("#hintMsg").textContent="No unused clue targets remain.";
+   button.disabled=true;
+   return;
+ }
+ var i=candidates[Math.floor(Math.random()*candidates.length)];
+ usedHints.add(i);
+ button.disabled=true;
+ $("#hintMsg").textContent=hintSets[current][i];
+}
+document.querySelectorAll(".hintbtn").forEach(function(b){b.addEventListener("click",function(){useHint(b)})});
 function saveScore(){var n=$("#name").value.trim().slice(0,24);if(!n){$("#name").focus();return}var a=scores();a.push({name:n,scene:current,time:Number(elapsed.toFixed(2)),date:day(),ts:Date.now()});localStorage.setItem(key(),JSON.stringify(a.slice(-500)));$("#save").disabled=true;$("#save").textContent="Score added";renderLeader("#leaderBody")}
 function today(){var a=scores().filter(function(x){return x.date===day()});if(filter!=="all")a=a.filter(function(x){return x.scene===filter});return a.sort(function(a,b){return a.time-b.time||a.ts-b.ts}).slice(0,10)}
 function renderTabs(sel){var e=$(sel);e.innerHTML="";var opts=[["all","Overall"]].concat(Object.keys(scenes).map(function(k){return[k,scenes[k].name]}));opts.forEach(function(o){var b=document.createElement("button");b.className="tab"+(filter===o[0]?" active":"");b.textContent=o[1];b.addEventListener("click",function(){filter=o[0];renderTabs(sel);renderLeader(sel==="#tabs"?"#leaderBody":"#modalBody")});e.appendChild(b)})}
