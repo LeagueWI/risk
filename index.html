@@ -20,7 +20,7 @@ h2{margin:10px 0}.heroCopy h2{font-size:clamp(2.2rem,5vw,4.2rem);line-height:.95
 .gameHead{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:14px}.gameHead p{margin:4px 0 0;color:var(--muted)}.stats{display:flex;gap:10px}.stat{border:1px solid var(--line);border-radius:10px;padding:8px 12px;min-width:110px}.stat b{display:block;font-size:1.25rem}.stat span{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 .progress{height:8px;background:#e7edf0;border-radius:999px;overflow:hidden;margin-bottom:14px}.progress div{height:100%;width:0;background:var(--teal)}
 .board{display:grid;grid-template-columns:1fr 1fr;gap:14px}.pane{position:relative;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#eef4f6}.label{position:absolute;z-index:3;top:12px;left:12px;background:#12324ae8;color:#fff;border-radius:999px;padding:7px 10px;font-size:.76rem;font-weight:800}
-svg{display:block;width:100%;aspect-ratio:4/3}.hits{position:absolute;inset:0}.hit{position:absolute;transform:translate(-50%,-50%);width:11%;height:14%;min-width:44px;min-height:44px;border:0;border-radius:50%;background:transparent}.hit:after{content:"";position:absolute;inset:8%;border:3px solid transparent;border-radius:50%}.hit.found:after{border-color:#fff;background:#287a5255;box-shadow:0 0 0 4px #287a52d9}
+.sceneimg{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}.hits{position:absolute;inset:0}.hit{position:absolute;transform:translate(-50%,-50%);width:11%;height:14%;min-width:44px;min-height:44px;border:0;border-radius:50%;background:transparent}.hit:after{content:"";position:absolute;inset:8%;border:3px solid transparent;border-radius:50%}.hit.found:after{border-color:#fff;background:#287a5255;box-shadow:0 0 0 4px #287a52d9}
 .toast{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:#132b3c;color:#fff;padding:9px 12px;border-radius:9px;font-weight:700;opacity:0;transition:.18s;z-index:6}.toast.show{opacity:1}
 .footer{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:14px;color:var(--muted)}.btn{border:0;border-radius:9px;padding:11px 15px;font-weight:800}.primary{background:var(--blue);color:#fff}.secondary{background:#edf3f5;color:var(--navy)}
 .results{display:grid;grid-template-columns:.9fr 1.1fr;gap:20px}.panel{border:1px solid var(--line);border-radius:16px;padding:24px;background:#fff}.bigtime{font-size:3.5rem;font-weight:900;color:var(--navy);line-height:1;margin:12px 0}
@@ -50,8 +50,8 @@ svg{display:block;width:100%;aspect-ratio:4/3}.hits{position:absolute;inset:0}.h
 <div class="progress"><div id="bar"></div></div>
 <div style="position:relative">
 <div class="board">
-<div class="pane"><div class="label">Safer Scene</div><svg id="safe" viewBox="0 0 800 600"></svg></div>
-<div class="pane"><div class="label">Riskier Scene • Tap here</div><svg id="risky" viewBox="0 0 800 600"></svg><div class="hits" id="hits"></div></div>
+<div class="pane"><div class="label">Safer Scene</div><img id="safe" class="sceneimg" alt="Safer municipal scene"></div>
+<div class="pane"><div class="label">Riskier Scene • Tap here</div><img id="risky" class="sceneimg" alt="Riskier municipal scene"><div class="hits" id="hits"></div></div>
 </div><div class="toast" id="toast"></div>
 </div>
 <div class="footer"><div>Look for changes in access, walking surfaces, equipment, storage, people, and work practices.</div><button class="btn secondary" id="restart">Restart scene</button></div>
@@ -67,51 +67,54 @@ svg{display:block;width:100%;aspect-ratio:4/3}.hits{position:absolute;inset:0}.h
 <div class="modal" id="modal"><div class="modalBox"><div style="display:flex;justify-content:space-between;gap:12px"><div><div class="eyebrow" style="color:var(--blue)">Today</div><h2>Daily leaderboard</h2></div><button class="btn secondary" id="close">Close</button></div><div class="tabs" id="modalTabs"></div><div id="modalBody"></div></div></div>
 <script>
 var scenes={
- cityhall:{name:"City Hall & Municipal Office",icon:"🏛️",desc:"Public access, records, office safety, facilities, and everyday administrative risk.",risks:[
- ["Unlocked workstation","An unattended unlocked workstation can expose municipal systems and information.",72,27],
- ["Confidential records exposed","Sensitive documents should not be left visible in public-facing areas.",42,47],
- ["Trip hazard","Cords across walking paths create a preventable fall exposure.",69,71],
- ["Blocked exit","Boxes or furniture should never obstruct an exit route.",84,53],
- ["Wet floor unmarked","Spills and wet surfaces should be addressed and marked promptly.",18,76],
- ["Open file drawer","Open drawers create strike and trip hazards.",30,66],
- ["Uncontrolled staff access","Public and staff-only spaces should be clearly managed.",15,44],
- ["Unsafe power setup","Overloaded or poorly placed electrical equipment creates avoidable risk.",55,30]]},
- publicworks:{name:"Public Works & Fleet Garage",icon:"🚧",desc:"Fleet, equipment, shop safety, PPE, storage, and operational exposures.",risks:[
- ["Missing PPE","Required protective equipment should match the task and exposure.",31,40],
- ["Unsecured ladder","Ladders should be stored and used to reduce fall and strike hazards.",83,31],
- ["Unlabeled chemical","Containers should be clearly labeled and stored appropriately.",67,69],
- ["Cord across walkway","Temporary cords should not create pedestrian hazards.",52,81],
- ["Unmarked spill","Spills should be contained, cleaned, and marked promptly.",68,60],
- ["Blocked emergency equipment","Emergency equipment must remain immediately accessible.",10,57],
- ["Unstable material storage","Stacked materials should be secured against shifting or falling.",86,76],
- ["Unsafe vehicle zone","Vehicle movement areas need clear separation and safe backing practices.",24,60]]},
- park:{name:"Park & Community Event",icon:"🌳",desc:"Public spaces, recreation, events, pedestrian flow, temporary setups, and facilities.",risks:[
- ["Unsecured tent","Temporary structures should be anchored for expected conditions.",22,58],
- ["Cord across pedestrian route","Cables should be covered, rerouted, or otherwise controlled.",37,73],
- ["Obstructed emergency access","Emergency routes should remain open throughout an event.",74,73],
- ["Trip hazard near tables","Event equipment should not create obstacles in walking paths.",55,63],
- ["Unsafe traffic interface","Vehicles and pedestrians need clear separation.",86,61],
- ["Damaged play equipment","Known defects should be controlled until repaired.",69,37],
- ["Poor crowd-flow setup","Barriers and signs should guide people without creating bottlenecks.",78,49],
- ["Unattended equipment","Equipment in public areas should be secured or supervised.",13,63]]}
+ cityhall:{name:"City Hall & Municipal Office",thumb:"images/cityhall-risky.png",safe:"images/cityhall-safe.png",risky:"images/cityhall-risky.png",desc:"Public access, records, office safety, facilities, and everyday administrative risk.",risks:[
+ ["Power strip and loose cords","Temporary cords and overloaded strips create both trip and electrical exposure.",10.4,56.6],
+ ["Unlocked workstation","Leaving a workstation open can expose systems and confidential information.",26.8,36.7],
+ ["Unauthorized visitor behind the desk","Public access to staff-only areas should be controlled.",43.8,32.4],
+ ["Confidential files left out","Sensitive records should not be left visible on the counter.",44.7,42.4],
+ ["Open file drawer","Open drawers create strike and trip hazards.",76.6,47.9],
+ ["Boxes stacked by the entrance","Stored materials can obstruct movement and emergency egress.",93.1,54.5],
+ ["Cable across the floor","A loose cable across a walking surface is a clear trip hazard.",54.8,72.4],
+ ["Wet floor without warning","Unmarked spills can quickly lead to slips and falls.",82.5,75.3]]},
+ publicworks:{name:"Public Works & Fleet Garage",thumb:"images/publicworks-risky.png",safe:"images/publicworks-safe.png",risky:"images/publicworks-risky.png",desc:"Fleet, equipment, shop safety, PPE, storage, and operational exposures.",risks:[
+ ["Missing high-visibility PPE","The mechanic in the vehicle bay should be wearing appropriate high-visibility protective gear.",20.1,55.5],
+ ["Oil spill under the truck","Fluid leaks should be contained and cleaned right away.",35.2,76.8],
+ ["Blocked fire extinguisher access","Emergency equipment must stay accessible at all times.",60.7,47.5],
+ ["Unstable stacked boxes","Materials stored overhead should be secured against falling.",76.6,24.2],
+ ["Open chemical storage cabinet","Chemical storage should be controlled and containers kept secure.",72.9,54.4],
+ ["Unsecured ladder","Ladders should be stored and positioned safely.",92.8,31.4],
+ ["Missing PPE at workbench","Staff at the bench should use appropriate PPE for the task.",87.1,59.4],
+ ["Cord across the floor","Cords stretched across the floor create a trip hazard in the bay.",66.6,88.3]]},
+ park:{name:"Park & Community Event",thumb:"images/park-risky.png",safe:"images/park-safe.png",risky:"images/park-risky.png",desc:"Public spaces, recreation, events, pedestrian flow, and facility exposures.",risks:[
+ ["Fallen crowd-control barrier","Loose barricades can create trip hazards and poor event control.",10.3,48.7],
+ ["Loose boxes around the event table","Supplies left in walking areas create unnecessary clutter and trip risk.",35.1,68.4],
+ ["Open equipment case and scattered gear","Equipment should be closed, secured, and kept out of circulation paths.",50.9,65.1],
+ ["Water bottles on the grass","Loose items in the event area contribute to trip and housekeeping issues.",57.1,69.1],
+ ["Extension cord across the walkway","Cables crossing a public path need protection or rerouting.",63.1,86.0],
+ ["Damaged playground slide","Broken playground equipment should be removed from service immediately.",89.4,46.2],
+ ["Unsecured event setup","A tent and event area should be fully secured and organized.",24.6,48.3],
+ ["Cluttered utility staging area","Poor staging around the service truck can obstruct operations and public safety.",75.0,49.6]]}
 };
 var current=null,found=new Set(),start=0,elapsed=0,raf=0,filter="all";
 function $(q){return document.querySelector(q)}
 function show(id){document.querySelectorAll(".screen").forEach(function(x){x.classList.remove("active")});$(id).classList.add("active");window.scrollTo(0,0)}
-function cardHTML(k,s){return '<button class="card" data-scene="'+k+'"><div class="thumb">'+s.icon+'</div><div class="cardBody"><h3>'+s.name+'</h3><p>'+s.desc+'</p></div></button>'}
+function cardHTML(k,s){return '<button class="card" data-scene="'+k+'"><div class="thumb"><img src="'+s.thumb+'" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></div><div class="cardBody"><h3>'+s.name+'</h3><p>'+s.desc+'</p></div></button>'}
 Object.keys(scenes).forEach(function(k){$("#sceneGrid").insertAdjacentHTML("beforeend",cardHTML(k,scenes[k]))});
 document.querySelectorAll("[data-scene]").forEach(function(b){b.addEventListener("click",function(){startScene(b.dataset.scene)})});
-function art(type,risk){
- var x='<rect width="800" height="600" fill="#dcebf1"/><rect y="410" width="800" height="190" fill="#d8d5c9"/>';
- if(type==="cityhall")x+='<rect x="55" y="90" width="690" height="320" rx="8" fill="#f6f3ea"/><rect x="80" y="125" width="130" height="250" fill="#c9d7df"/><rect x="615" y="125" width="95" height="215" fill="#d8e1e6"/><rect x="260" y="180" width="300" height="115" rx="8" fill="#b88055"/><rect x="285" y="150" width="72" height="48" fill="#35576c"/><rect x="445" y="150" width="72" height="48" fill="#35576c"/><circle cx="320" cy="340" r="34" fill="#d0a27e"/><rect x="292" y="374" width="56" height="70" rx="16" fill="#547b92"/><circle cx="540" cy="340" r="34" fill="#c58d67"/><rect x="512" y="374" width="56" height="70" rx="16" fill="#6f8560"/>';
- if(type==="publicworks")x+='<rect x="40" y="80" width="720" height="330" rx="8" fill="#d9dcda"/><rect x="105" y="255" width="155" height="80" rx="12" fill="#dba63d"/><circle cx="135" cy="345" r="29" fill="#323a40"/><circle cx="235" cy="345" r="29" fill="#323a40"/><rect x="355" y="135" width="180" height="155" fill="#a7b5b4"/><rect x="575" y="130" width="130" height="220" fill="#9f8770"/><circle cx="250" cy="230" r="30" fill="#c78e68"/><rect x="222" y="260" width="56" height="92" rx="14" fill="#547b92"/>';
- if(type==="park")x+='<rect width="800" height="410" fill="#cfe3ee"/><circle cx="90" cy="135" r="60" fill="#7faa73"/><rect x="82" y="180" width="18" height="120" fill="#805f40"/><circle cx="730" cy="115" r="70" fill="#7faa73"/><rect x="720" y="170" width="18" height="130" fill="#805f40"/><rect x="150" y="210" width="260" height="12" fill="#765c42"/><polygon points="130,210 280,120 430,210" fill="#edf1f2"/><rect x="170" y="222" width="12" height="150" fill="#555"/><rect x="395" y="222" width="12" height="150" fill="#555"/><rect x="505" y="230" width="175" height="115" rx="16" fill="#e7a34b"/>';
- if(risk&&type==="cityhall")x+='<path d="M440 350 C500 390 515 450 565 500" stroke="#222" stroke-width="8" fill="none"/><rect x="625" y="300" width="85" height="55" fill="#8d6b4a"/><rect x="650" y="255" width="80" height="48" fill="#8d6b4a"/><rect x="190" y="360" width="110" height="42" fill="#7b604e"/><rect x="500" y="132" width="82" height="58" fill="#274c61"/><circle cx="145" cy="456" r="34" fill="#94b8c7"/><rect x="350" y="280" width="120" height="15" fill="#fff8cc"/>';
- if(risk&&type==="publicworks")x+='<line x1="650" y1="110" x2="710" y2="290" stroke="#705842" stroke-width="15"/><rect x="520" y="360" width="115" height="18" rx="9" fill="#6f92a0"/><path d="M300 505 C390 460 460 510 545 475" stroke="#222" stroke-width="10" fill="none"/><rect x="505" y="382" width="45" height="65" fill="#c4a24d"/><rect x="600" y="400" width="85" height="125" fill="#aa845e"/><rect x="680" y="400" width="60" height="155" fill="#aa845e"/>';
- if(risk&&type==="park")x+='<path d="M175 430 C260 390 340 470 430 425" stroke="#222" stroke-width="10" fill="none"/><rect x="410" y="340" width="90" height="55" fill="#8a6b50"/><rect x="510" y="350" width="70" height="65" fill="#8a6b50"/><rect x="590" y="420" width="130" height="18" fill="#c44"/><rect x="610" y="438" width="15" height="90" fill="#555"/><rect x="690" y="438" width="15" height="90" fill="#555"/><rect x="60" y="330" width="105" height="80" rx="10" fill="#7b8791"/>';
- return x;
+function draw(k){
+ $("#safe").src=scenes[k].safe;
+ $("#risky").src=scenes[k].risky;
+ $("#hits").innerHTML="";
+ scenes[k].risks.forEach(function(r,i){
+   var b=document.createElement("button");
+   b.className="hit";
+   b.style.left=r[2]+"%";
+   b.style.top=r[3]+"%";
+   b.setAttribute("aria-label","Potential risk area");
+   b.addEventListener("click",function(){hit(i,b)});
+   $("#hits").appendChild(b);
+ });
 }
-function draw(k){$("#safe").innerHTML=art(k,false);$("#risky").innerHTML=art(k,true);$("#hits").innerHTML="";scenes[k].risks.forEach(function(r,i){var b=document.createElement("button");b.className="hit";b.style.left=r[2]+"%";b.style.top=r[3]+"%";b.setAttribute("aria-label","Potential risk area");b.addEventListener("click",function(){hit(i,b)});$("#hits").appendChild(b)})}
 function startScene(k){cancelAnimationFrame(raf);current=k;found=new Set();elapsed=0;$("#gameTitle").textContent=scenes[k].name;$("#timer").textContent="0.00";$("#count").textContent="0 / 8";$("#bar").style.width="0";draw(k);show("#sGame");start=performance.now();tick()}
 function tick(){elapsed=(performance.now()-start)/1000;$("#timer").textContent=elapsed.toFixed(2);raf=requestAnimationFrame(tick)}
 var tt=0;function toast(t){$("#toast").textContent=t;$("#toast").classList.add("show");clearTimeout(tt);tt=setTimeout(function(){$("#toast").classList.remove("show")},900)}
