@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>League Insurance | Spot the Risk</title>\n<meta name="spot-risk-build" content="2026-09-27-photoreal-v2-dynamic-hints">
+<title>League Insurance | Spot the Risk</title>\n<meta name="spot-risk-build" content="2026-09-27-hotspots-v3">
 <style>
 :root{--navy:#12324a;--blue:#1f5d86;--teal:#2b7a78;--ink:#16212a;--muted:#64727d;--line:#d8e0e5;--bg:#f4f7f8;--good:#287a52}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}
@@ -20,7 +20,7 @@ h2{margin:10px 0}.heroCopy h2{font-size:clamp(2.2rem,5vw,4.2rem);line-height:.95
 .gameHead{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:14px}.gameHead p{margin:4px 0 0;color:var(--muted)}.stats{display:flex;gap:10px}.stat{border:1px solid var(--line);border-radius:10px;padding:8px 12px;min-width:110px}.stat b{display:block;font-size:1.25rem}.stat span{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 .progress{height:8px;background:#e7edf0;border-radius:999px;overflow:hidden;margin-bottom:14px}.progress div{height:100%;width:0;background:var(--teal)}
 .board{display:grid;grid-template-columns:1fr 1fr;gap:14px}.pane{position:relative;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#eef4f6}.label{position:absolute;z-index:3;top:12px;left:12px;background:#12324ae8;color:#fff;border-radius:999px;padding:7px 10px;font-size:.76rem;font-weight:800}
-.sceneimg{display:block;width:100%;height:auto;object-fit:contain}.hits{position:absolute;inset:0}.hit{position:absolute;transform:translate(-50%,-50%);min-width:38px;min-height:38px;border:0;border-radius:18px;background:transparent;touch-action:manipulation}.hit:after{content:"";position:absolute;inset:8%;border:3px solid transparent;border-radius:50%}.hit.found:after{border-color:#fff;background:#287a5255;box-shadow:0 0 0 4px #287a52d9}
+.sceneimg{display:block;width:100%;height:auto;object-fit:contain}.hits{position:absolute;inset:0;z-index:4;cursor:crosshair;touch-action:manipulation}.foundMarker{position:absolute;transform:translate(-50%,-50%);width:38px;height:38px;border:3px solid #fff;border-radius:50%;background:#287a5255;box-shadow:0 0 0 4px #287a52d9;pointer-events:none}
 .toast{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:#132b3c;color:#fff;padding:9px 12px;border-radius:9px;font-weight:700;opacity:0;transition:.18s;z-index:6}.toast.show{opacity:1}
 .hintbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.hintbtn{border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:9px;padding:10px 13px;font-weight:800}.hintbtn:disabled{opacity:.48;cursor:default}.hintmsg{margin-top:10px;min-height:24px;padding:10px 12px;border-radius:9px;background:#f4f8fa;color:#334651;font-size:.92rem;line-height:1.4}.footer{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:14px;color:var(--muted)}.btn{border:0;border-radius:9px;padding:11px 15px;font-weight:800}.primary{background:var(--blue);color:#fff}.secondary{background:#edf3f5;color:var(--navy)}
 .results{display:grid;grid-template-columns:.9fr 1.1fr;gap:20px}.panel{border:1px solid var(--line);border-radius:16px;padding:24px;background:#fff}.bigtime{font-size:3.5rem;font-weight:900;color:var(--navy);line-height:1;margin:12px 0}
@@ -83,54 +83,42 @@ h2{margin:10px 0}.heroCopy h2{font-size:clamp(2.2rem,5vw,4.2rem);line-height:.95
 <script>
 var scenes={
  cityhall:{
-  name:"City Hall & Municipal Office",
-  thumb:"images/photoreal-v2/cityhall-risky.png",
-  safe:"images/photoreal-v2/cityhall-safe.png",
-  risky:"images/photoreal-v2/cityhall-risky.png",
-  desc:"Public access, records, office safety, facilities, and everyday administrative risk.",
+  name:"City Hall & Municipal Office",thumb:"images/photoreal-v2/cityhall-risky.png",safe:"images/photoreal-v2/cityhall-safe.png",risky:"images/photoreal-v2/cityhall-risky.png",desc:"Public access, records, office safety, facilities, and everyday administrative risk.",
   risks:[
-   {id:"ch-power",label:"Power strip and loose cords",detail:"Temporary cords and overloaded strips create both trip and electrical exposure.",x:19.5,y:59.5,w:17,h:13,hint:"Look low on the left side of the reception desk, where several devices meet the floor."},
-   {id:"ch-workstation",label:"Unlocked workstation",detail:"Leaving a workstation open can expose systems and confidential information.",x:27.7,y:38.3,w:11,h:13,hint:"Compare the computer screens at the reception counter."},
-   {id:"ch-visitor",label:"Unauthorized visitor behind the desk",detail:"Public access to staff-only areas should be controlled.",x:39.5,y:34,w:11,h:17,hint:"One person is standing somewhere visitors normally should not be."},
-   {id:"ch-files",label:"Confidential files left out",detail:"Sensitive records should not be left visible on the counter.",x:45,y:42,w:13,h:9,hint:"Look across the top of the reception counter for information left in view."},
-   {id:"ch-drawer",label:"Open file drawer",detail:"Open drawers create strike and trip hazards.",x:76.5,y:45.5,w:11,h:18,hint:"Check the filing cabinet on the right side of the room."},
-   {id:"ch-boxes",label:"Boxes stacked by the entrance",detail:"Stored materials can obstruct movement and emergency egress.",x:92,y:53.5,w:13,h:24,hint:"Look at the path around the entrance door."},
-   {id:"ch-cable",label:"Cable across the floor",detail:"A loose cable across a walking surface is a clear trip hazard.",x:60,y:63,w:38,h:8,hint:"Scan the open walking area in front of the reception desk."},
-   {id:"ch-spill",label:"Wet floor without warning",detail:"Unmarked spills can quickly lead to slips and falls.",x:81,y:71,w:24,h:14,hint:"Look at the floor on the right side of the waiting area."}
+   {id:"ch-power",label:"Power strip and loose cords",detail:"Temporary cords and overloaded strips create both trip and electrical exposure.",x:10.4,y:56.6,r:5.3,hint:"Look low on the left side of the reception desk, where several devices meet the floor."},
+   {id:"ch-workstation",label:"Unlocked workstation",detail:"Leaving a workstation open can expose systems and confidential information.",x:26.8,y:36.7,r:4.6,hint:"Compare the computer screens at the reception counter."},
+   {id:"ch-visitor",label:"Unauthorized visitor behind the desk",detail:"Public access to staff-only areas should be controlled.",x:43.8,y:32.4,r:5.0,hint:"One person is standing somewhere visitors normally should not be."},
+   {id:"ch-files",label:"Confidential files left out",detail:"Sensitive records should not be left visible on the counter.",x:44.7,y:42.4,r:4.3,hint:"Look across the top of the reception counter for information left in view."},
+   {id:"ch-drawer",label:"Open file drawer",detail:"Open drawers create strike and trip hazards.",x:76.6,y:47.9,r:4.8,hint:"Check the filing cabinet on the right side of the room."},
+   {id:"ch-boxes",label:"Boxes stacked by the entrance",detail:"Stored materials can obstruct movement and emergency egress.",x:93.1,y:54.5,r:5.2,hint:"Look at the path around the entrance door."},
+   {id:"ch-cable",label:"Cable across the floor",detail:"A loose cable across a walking surface is a clear trip hazard.",x:54.8,y:72.4,r:5.5,hint:"Scan the open walking area in front of the reception desk."},
+   {id:"ch-spill",label:"Wet floor without warning",detail:"Unmarked spills can quickly lead to slips and falls.",x:82.5,y:75.3,r:6.2,hint:"Look at the floor on the right side of the waiting area."}
   ]
  },
  publicworks:{
-  name:"Public Works & Fleet Garage",
-  thumb:"images/photoreal-v2/publicworks-risky.png",
-  safe:"images/photoreal-v2/publicworks-safe.png",
-  risky:"images/photoreal-v2/publicworks-risky.png",
-  desc:"Fleet, equipment, shop safety, PPE, storage, and operational exposures.",
+  name:"Public Works & Fleet Garage",thumb:"images/photoreal-v2/publicworks-risky.png",safe:"images/photoreal-v2/publicworks-safe.png",risky:"images/photoreal-v2/publicworks-risky.png",desc:"Fleet, equipment, shop safety, PPE, storage, and operational exposures.",
   risks:[
-   {id:"pw-ppe-left",label:"Missing high-visibility PPE",detail:"The mechanic in the vehicle bay should be wearing appropriate high-visibility protective gear.",x:22.5,y:49.5,w:13,h:28,hint:"Compare the worker at the front-left of the truck between the two scenes."},
-   {id:"pw-spill",label:"Oil spill under the truck",detail:"Fluid leaks should be contained and cleaned right away.",x:41,y:72,w:24,h:12,hint:"Look directly under and just in front of the truck."},
-   {id:"pw-extinguisher",label:"Blocked fire extinguisher access",detail:"Emergency equipment must stay accessible at all times.",x:61,y:43.5,w:12,h:18,hint:"Find the fire extinguisher and check whether anything blocks access to it."},
-   {id:"pw-boxes",label:"Unstable stacked boxes",detail:"Materials stored overhead should be secured against falling.",x:72,y:22,w:15,h:24,hint:"Look high on the storage rack to the right of the truck."},
-   {id:"pw-chemicals",label:"Open chemical storage cabinet",detail:"Chemical storage should be controlled and containers kept secure.",x:73,y:51.5,w:13,h:25,hint:"Inspect the yellow storage cabinet."},
-   {id:"pw-ladder",label:"Unsecured ladder",detail:"Ladders should be stored and positioned safely.",x:88,y:27,w:10,h:31,hint:"Look at the orange ladder along the right wall."},
-   {id:"pw-ppe-right",label:"Missing PPE at workbench",detail:"Staff at the bench should use appropriate PPE for the task.",x:86,y:54,w:13,h:27,hint:"Compare the worker at the right-side workbench."},
-   {id:"pw-cord",label:"Cord across the floor",detail:"Cords stretched across the floor create a trip hazard in the bay.",x:53,y:80.5,w:56,h:8,hint:"Scan the floor from the right workbench across the front of the bay."}
+   {id:"pw-ppe-left",label:"Missing high-visibility PPE",detail:"The mechanic in the vehicle bay should be wearing appropriate high-visibility protective gear.",x:20.1,y:55.5,r:5.3,hint:"Compare the worker at the front-left of the truck between the two scenes."},
+   {id:"pw-spill",label:"Oil spill under the truck",detail:"Fluid leaks should be contained and cleaned right away.",x:35.2,y:76.8,r:5.5,hint:"Look directly under and just in front of the truck."},
+   {id:"pw-extinguisher",label:"Blocked fire extinguisher access",detail:"Emergency equipment must stay accessible at all times.",x:60.7,y:47.5,r:4.8,hint:"Find the fire extinguisher and check whether anything blocks access to it."},
+   {id:"pw-boxes",label:"Unstable stacked boxes",detail:"Materials stored overhead should be secured against falling.",x:76.6,y:24.2,r:5.2,hint:"Look high on the storage rack to the right of the truck."},
+   {id:"pw-chemicals",label:"Open chemical storage cabinet",detail:"Chemical storage should be controlled and containers kept secure.",x:72.9,y:54.4,r:5.0,hint:"Inspect the yellow storage cabinet."},
+   {id:"pw-ladder",label:"Unsecured ladder",detail:"Ladders should be stored and positioned safely.",x:92.8,y:31.4,r:4.8,hint:"Look at the orange ladder along the right wall."},
+   {id:"pw-ppe-right",label:"Missing PPE at workbench",detail:"Staff at the bench should use appropriate PPE for the task.",x:87.1,y:59.4,r:5.3,hint:"Compare the worker at the right-side workbench."},
+   {id:"pw-cord",label:"Cord across the floor",detail:"Cords stretched across the floor create a trip hazard in the bay.",x:66.6,y:88.3,r:5.6,hint:"Scan the floor from the right workbench across the front of the bay."}
   ]
  },
  park:{
-  name:"Park & Community Event",
-  thumb:"images/photoreal-v2/park-risky.png",
-  safe:"images/photoreal-v2/park-safe.png",
-  risky:"images/photoreal-v2/park-risky.png",
-  desc:"Public spaces, recreation, events, pedestrian flow, and facility exposures.",
+  name:"Park & Community Event",thumb:"images/photoreal-v2/park-risky.png",safe:"images/photoreal-v2/park-safe.png",risky:"images/photoreal-v2/park-risky.png",desc:"Public spaces, recreation, events, pedestrian flow, and facility exposures.",
   risks:[
-   {id:"pk-barrier",label:"Fallen crowd-control barrier",detail:"Loose barricades can create trip hazards and poor event control.",x:15.5,y:49.5,w:18,h:16,hint:"Look along the left edge of the event setup near the landscaping."},
-   {id:"pk-boxes",label:"Loose boxes around the event table",detail:"Supplies left in walking areas create unnecessary clutter and trip risk.",x:19,y:61,w:18,h:18,hint:"Check the ground around the left side of the blue-covered table."},
-   {id:"pk-case",label:"Open equipment case and scattered gear",detail:"Equipment should be closed, secured, and kept out of circulation paths.",x:55,y:61.5,w:16,h:19,hint:"Look just to the right of the event table for an open container."},
-   {id:"pk-bottles",label:"Water bottles on the grass",detail:"Loose items in the event area contribute to trip and housekeeping issues.",x:61,y:66,w:12,h:11,hint:"Scan the grass between the event setup and the walkway for small loose items."},
-   {id:"pk-cord",label:"Extension cord across the walkway",detail:"Cables crossing a public path need protection or rerouting.",x:69,y:78,w:43,h:9,hint:"Follow the curved pedestrian path in the foreground."},
-   {id:"pk-slide",label:"Damaged playground slide",detail:"Broken playground equipment should be removed from service immediately.",x:87,y:46,w:12,h:20,hint:"Inspect the playground slide carefully."},
-   {id:"pk-tent",label:"Unsecured event setup",detail:"A tent and event area should be fully secured and organized.",x:52,y:43.5,w:10,h:26,hint:"Look at the right side of the canopy and how it meets the ground."},
-   {id:"pk-staging",label:"Cluttered utility staging area",detail:"Poor staging around the service truck can obstruct operations and public safety.",x:73,y:44,w:20,h:20,hint:"Check the work area around the utility truck and traffic cones."}
+   {id:"pk-barrier",label:"Fallen crowd-control barrier",detail:"Loose barricades can create trip hazards and poor event control.",x:10.3,y:48.7,r:5.2,hint:"Look along the left edge of the event setup near the landscaping."},
+   {id:"pk-boxes",label:"Loose boxes around the event table",detail:"Supplies left in walking areas create unnecessary clutter and trip risk.",x:35.1,y:68.4,r:5.1,hint:"Check the ground around the blue-covered event table."},
+   {id:"pk-case",label:"Open equipment case and scattered gear",detail:"Equipment should be closed, secured, and kept out of circulation paths.",x:50.9,y:65.1,r:4.8,hint:"Look just to the right of the event table for an open container."},
+   {id:"pk-bottles",label:"Water bottles on the grass",detail:"Loose items in the event area contribute to trip and housekeeping issues.",x:57.1,y:69.1,r:4.0,hint:"Scan the grass between the event setup and the walkway for small loose items."},
+   {id:"pk-cord",label:"Extension cord across the walkway",detail:"Cables crossing a public path need protection or rerouting.",x:63.1,y:86.0,r:5.2,hint:"Follow the curved pedestrian path in the foreground."},
+   {id:"pk-slide",label:"Damaged playground slide",detail:"Broken playground equipment should be removed from service immediately.",x:89.4,y:46.2,r:5.0,hint:"Inspect the playground slide carefully."},
+   {id:"pk-tent",label:"Unsecured event setup",detail:"A tent and event area should be fully secured and organized.",x:24.6,y:48.3,r:5.0,hint:"Look at how the canopy is secured near the ground."},
+   {id:"pk-staging",label:"Cluttered utility staging area",detail:"Poor staging around the service truck can obstruct operations and public safety.",x:75.0,y:49.6,r:5.5,hint:"Check the work area around the utility truck and traffic cones."}
   ]
  },
 };
@@ -144,20 +132,33 @@ document.querySelectorAll("[data-scene]").forEach(function(b){b.addEventListener
 function draw(k){
  $("#safe").src=scenes[k].safe;
  $("#risky").src=scenes[k].risky;
- $("#hits").innerHTML="";
- scenes[k].risks.forEach(function(r){
-   var b=document.createElement("button");
-   b.type="button";
-   b.className="hit";
-   b.dataset.riskId=r.id;
-   b.style.left=r.x+"%";
-   b.style.top=r.y+"%";
-   b.style.width=r.w+"%";
-   b.style.height=r.h+"%";
-   b.setAttribute("aria-label","Potential risk area");
-   b.addEventListener("click",function(){hit(r.id,b)});
-   $("#hits").appendChild(b);
- });
+ var layer=$("#hits");
+ layer.innerHTML="";
+ layer.onclick=function(e){
+   if(!current)return;
+   var rect=layer.getBoundingClientRect();
+   var x=(e.clientX-rect.left)/rect.width*100;
+   var y=(e.clientY-rect.top)/rect.height*100;
+   var candidates=scenes[current].risks
+     .filter(function(r){return !found.has(r.id)})
+     .map(function(r){
+       var dx=x-r.x, dy=y-r.y;
+       var d=Math.sqrt(dx*dx+dy*dy);
+       return {risk:r,d:d};
+     })
+     .filter(function(o){return o.d<=o.risk.r})
+     .sort(function(a,b){return a.d-b.d});
+   if(candidates.length)hit(candidates[0].risk.id);
+ };
+}
+function renderFoundMarker(risk){
+ var layer=$("#hits");
+ var m=document.createElement("div");
+ m.className="foundMarker";
+ m.dataset.riskId=risk.id;
+ m.style.left=risk.x+"%";
+ m.style.top=risk.y+"%";
+ layer.appendChild(m);
 }
 function startScene(k){
  cancelAnimationFrame(raf);
@@ -179,12 +180,12 @@ function startScene(k){
 function tick(){elapsed=(performance.now()-start)/1000;$("#timer").textContent=elapsed.toFixed(2);raf=requestAnimationFrame(tick)}
 var tt=0;
 function toast(t){$("#toast").textContent=t;$("#toast").classList.add("show");clearTimeout(tt);tt=setTimeout(function(){$("#toast").classList.remove("show")},900)}
-function hit(riskId,b){
+function hit(riskId){
  if(found.has(riskId))return;
  var risk=scenes[current].risks.find(function(r){return r.id===riskId});
  if(!risk)return;
  found.add(riskId);
- b.classList.add("found");
+ renderFoundMarker(risk);
  toast(risk.label);
  $("#count").textContent=found.size+" / "+scenes[current].risks.length;
  $("#bar").style.width=(found.size/scenes[current].risks.length*100)+"%";
