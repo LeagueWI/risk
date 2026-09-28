@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>League Insurance | Spot the Risk</title>\n<meta name="spot-risk-build" content="2026-09-27-hotspots-v3">
+<title>League Insurance | Spot the Risk</title>\n<meta name="spot-risk-build" content="2026-09-28-touch-targets-v4">
 <style>
 :root{--navy:#12324a;--blue:#1f5d86;--teal:#2b7a78;--ink:#16212a;--muted:#64727d;--line:#d8e0e5;--bg:#f4f7f8;--good:#287a52}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}
@@ -20,7 +20,7 @@ h2{margin:10px 0}.heroCopy h2{font-size:clamp(2.2rem,5vw,4.2rem);line-height:.95
 .gameHead{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-bottom:14px}.gameHead p{margin:4px 0 0;color:var(--muted)}.stats{display:flex;gap:10px}.stat{border:1px solid var(--line);border-radius:10px;padding:8px 12px;min-width:110px}.stat b{display:block;font-size:1.25rem}.stat span{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 .progress{height:8px;background:#e7edf0;border-radius:999px;overflow:hidden;margin-bottom:14px}.progress div{height:100%;width:0;background:var(--teal)}
 .board{display:grid;grid-template-columns:1fr 1fr;gap:14px}.pane{position:relative;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#eef4f6}.label{position:absolute;z-index:3;top:12px;left:12px;background:#12324ae8;color:#fff;border-radius:999px;padding:7px 10px;font-size:.76rem;font-weight:800}
-.sceneimg{display:block;width:100%;height:auto;object-fit:contain}.hits{position:absolute;inset:0;z-index:4;cursor:crosshair;touch-action:manipulation}.foundMarker{position:absolute;transform:translate(-50%,-50%);width:38px;height:38px;border:3px solid #fff;border-radius:50%;background:#287a5255;box-shadow:0 0 0 4px #287a52d9;pointer-events:none}
+.sceneimg{display:block;width:100%;height:auto;object-fit:contain}.hits{position:absolute;inset:0;z-index:4;cursor:crosshair;touch-action:manipulation}.foundMarker{position:absolute;transform:translate(-50%,-50%);width:46px;height:46px;border:3px solid #fff;border-radius:50%;background:#287a5255;box-shadow:0 0 0 4px #287a52d9;pointer-events:none}
 .toast{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:#132b3c;color:#fff;padding:9px 12px;border-radius:9px;font-weight:700;opacity:0;transition:.18s;z-index:6}.toast.show{opacity:1}
 .hintbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.hintbtn{border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:9px;padding:10px 13px;font-weight:800}.hintbtn:disabled{opacity:.48;cursor:default}.hintmsg{margin-top:10px;min-height:24px;padding:10px 12px;border-radius:9px;background:#f4f8fa;color:#334651;font-size:.92rem;line-height:1.4}.footer{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:14px;color:var(--muted)}.btn{border:0;border-radius:9px;padding:11px 15px;font-weight:800}.primary{background:var(--blue);color:#fff}.secondary{background:#edf3f5;color:var(--navy)}
 .results{display:grid;grid-template-columns:.9fr 1.1fr;gap:20px}.panel{border:1px solid var(--line);border-radius:16px;padding:24px;background:#fff}.bigtime{font-size:3.5rem;font-weight:900;color:var(--navy);line-height:1;margin:12px 0}
@@ -139,14 +139,27 @@ function draw(k){
    var rect=layer.getBoundingClientRect();
    var x=(e.clientX-rect.left)/rect.width*100;
    var y=(e.clientY-rect.top)/rect.height*100;
+   var tapX=e.clientX-rect.left;
+   var tapY=e.clientY-rect.top;
    var candidates=scenes[current].risks
      .filter(function(r){return !found.has(r.id)})
      .map(function(r){
-       var dx=x-r.x, dy=y-r.y;
+       var targetX=(r.x/100)*rect.width;
+       var targetY=(r.y/100)*rect.height;
+       var dx=tapX-targetX;
+       var dy=tapY-targetY;
        var d=Math.sqrt(dx*dx+dy*dy);
-       return {risk:r,d:d};
+
+       // Booth-friendly target size:
+       // - at least 54px radius for reliable finger taps
+       // - scales up with the rendered scene width
+       // - individual risk radius can still enlarge larger objects
+       var proportional=(r.r/100)*rect.width;
+       var hitRadius=Math.max(54, proportional*1.55);
+
+       return {risk:r,d:d,hitRadius:hitRadius};
      })
-     .filter(function(o){return o.d<=o.risk.r})
+     .filter(function(o){return o.d<=o.hitRadius})
      .sort(function(a,b){return a.d-b.d});
    if(candidates.length)hit(candidates[0].risk.id);
  };
