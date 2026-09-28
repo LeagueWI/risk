@@ -29,6 +29,20 @@ h2{margin:10px 0}.heroCopy h2{font-size:clamp(2.2rem,5vw,4.2rem);line-height:.95
 .tabs{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}.tab{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 10px}.tab.active{background:var(--navy);color:#fff}.table{width:100%;border-collapse:collapse}.table th,.table td{text-align:left;border-bottom:1px solid #edf1f3;padding:9px 7px}.table th{font-size:.7rem;color:var(--muted);text-transform:uppercase}.empty{padding:24px;text-align:center;color:var(--muted)}
 .modal{position:fixed;inset:0;background:#071620aa;display:none;align-items:center;justify-content:center;padding:20px;z-index:20}.modal.open{display:flex}.modalBox{background:#fff;border-radius:16px;padding:24px;max-width:800px;width:100%}
 @media(max-width:900px){main{padding:18px}.hero,.results,.board,.grid{grid-template-columns:1fr}.gameHead,.footer{align-items:flex-start;flex-direction:column}.card,.cardBody{min-height:190px}}
+
+/* Scene selection readability */
+.card{position:relative;min-height:220px;background:#f8fafb}
+.thumb{position:absolute;inset:0;height:auto;display:block;overflow:hidden}
+.thumb::after{content:"";position:absolute;inset:0;background:rgba(255,255,255,.78);pointer-events:none}
+.thumb img{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important}
+.cardBody{position:relative;z-index:2;min-height:220px;padding:24px;display:flex;flex-direction:column;justify-content:flex-end;pointer-events:none}
+.cardBody h3{margin:0 0 8px;color:var(--ink);font-size:1.25rem;line-height:1.15;text-shadow:0 1px 0 #fff}
+.cardBody p{margin:0;color:#2f404b;line-height:1.5;font-weight:650;text-shadow:0 1px 0 #fff}
+.hintbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.hintbtn{border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:9px;padding:10px 13px;font-weight:800}
+.hintbtn:disabled{opacity:.48;cursor:default}
+.hintmsg{margin-top:10px;min-height:24px;padding:10px 12px;border-radius:9px;background:#f4f8fa;color:#334651;font-size:.92rem;line-height:1.4}
+@media(max-width:900px){.card,.cardBody{min-height:190px}}
 </style>
 </head>
 <body>
@@ -54,6 +68,7 @@ h2{margin:10px 0}.heroCopy h2{font-size:clamp(2.2rem,5vw,4.2rem);line-height:.95
 <div class="pane"><div class="label">Scene 2 • Tap here</div><img id="risky" class="sceneimg" alt="Municipal scene 2"><div class="hits" id="hits"></div></div>
 </div><div class="toast" id="toast"></div>
 </div>
+<div class="hintbar"><button type="button" class="hintbtn">Hint 1</button><button type="button" class="hintbtn">Hint 2</button><button type="button" class="hintbtn">Hint 3</button></div><div class="hintmsg" id="hintMsg" aria-live="polite">Need a clue? You have three hints for this round.</div>
 <div class="footer"><div>Look for changes in access, walking surfaces, equipment, storage, people, and work practices.</div><button class="btn secondary" id="restart">Restart scene</button></div>
 </section>
 <section id="sResult" class="screen">
@@ -148,7 +163,7 @@ function draw(k){
    $("#hits").appendChild(b);
  });
 }
-function startScene(k){cancelAnimationFrame(raf);current=k;found=new Set();usedHints=new Set();elapsed=0;$("#gameTitle").textContent=scenes[k].name;$("#timer").textContent="0.00";$("#count").textContent="0 / 8";$("#bar").style.width="0";document.querySelectorAll(".hintbtn").forEach(function(b){b.disabled=false});$("#hintMsg").textContent="Need a clue? You have three hints for this round.";draw(k);show("#sGame");start=performance.now();tick()}
+function startScene(k){cancelAnimationFrame(raf);current=k;found=new Set();usedHints=new Set();elapsed=0;$("#gameTitle").textContent=scenes[k].name;$("#timer").textContent="0.00";$("#count").textContent="0 / 8";$("#bar").style.width="0";document.querySelectorAll(".hintbtn").forEach(function(b){b.disabled=false});var hm=$("#hintMsg");if(hm)hm.textContent="Need a clue? You have three hints for this round.";draw(k);show("#sGame");start=performance.now();tick()}
 function tick(){elapsed=(performance.now()-start)/1000;$("#timer").textContent=elapsed.toFixed(2);raf=requestAnimationFrame(tick)}
 var tt=0;function toast(t){$("#toast").textContent=t;$("#toast").classList.add("show");clearTimeout(tt);tt=setTimeout(function(){$("#toast").classList.remove("show")},900)}
 function hit(i,b){if(found.has(i))return;found.add(i);b.classList.add("found");toast(scenes[current].risks[i][0]);$("#count").textContent=found.size+" / 8";$("#bar").style.width=(found.size/8*100)+"%";if(found.size===8){cancelAnimationFrame(raf);elapsed=(performance.now()-start)/1000;setTimeout(results,350)}}
@@ -160,14 +175,14 @@ function useHint(button){
  var candidates=[];
  scenes[current].risks.forEach(function(r,i){if(!found.has(i)&&!usedHints.has(i))candidates.push(i)});
  if(!candidates.length){
-   $("#hintMsg").textContent="No unused clue targets remain.";
+   var hm=$("#hintMsg");if(hm)hm.textContent="No unused clue targets remain.";
    button.disabled=true;
    return;
  }
  var i=candidates[Math.floor(Math.random()*candidates.length)];
  usedHints.add(i);
  button.disabled=true;
- $("#hintMsg").textContent=hintSets[current][i];
+ var hm=$("#hintMsg");if(hm)hm.textContent=hintSets[current][i];
 }
 document.querySelectorAll(".hintbtn").forEach(function(b){b.addEventListener("click",function(){useHint(b)})});
 function saveScore(){var n=$("#name").value.trim().slice(0,24);if(!n){$("#name").focus();return}var a=scores();a.push({name:n,scene:current,time:Number(elapsed.toFixed(2)),date:day(),ts:Date.now()});localStorage.setItem(key(),JSON.stringify(a.slice(-500)));$("#save").disabled=true;$("#save").textContent="Score added";renderLeader("#leaderBody")}
