@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>League Insurance | Spot the Risk</title>\n<meta name="spot-risk-build" content="2026-09-28-touch-targets-v4">
+<title>League Insurance | Spot the Risk</title>\n<meta name="spot-risk-build" content="2026-09-28-publicworks-recalibrated-v5">
 <style>
 :root{--navy:#12324a;--blue:#1f5d86;--teal:#2b7a78;--ink:#16212a;--muted:#64727d;--line:#d8e0e5;--bg:#f4f7f8;--good:#287a52}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}
@@ -54,13 +54,13 @@ h2{margin:10px 0}.heroCopy h2{font-size:clamp(2.2rem,5vw,4.2rem);line-height:.95
 <main>
 <section id="sHome" class="screen active">
 <div class="hero">
-<div class="heroCopy"><div class="eyebrow">League Insurance Risk Lab</div><h2>Spot the Risk</h2><p>Two scenes look almost identical. One contains eight municipal risk issues. Find every difference as fast as you can and see where you rank today.</p></div>
-<div class="how"><h3>How to play</h3><ol><li>Choose a municipal setting.</li><li>The clock starts when the scene appears.</li><li>Tap the differences you spot in <strong>Scene 2</strong>.</li><li>Find all eight risks to stop the clock.</li></ol><p class="small">Each difference represents an exposure that can contribute to injury, loss, disruption, or a claim.</p></div>
+<div class="heroCopy"><div class="eyebrow">League Insurance Risk Lab</div><h2>Spot the Risk</h2><p>Two scenes look almost identical. One contains municipal risk issues. Find every difference as fast as you can and see where you rank today.</p></div>
+<div class="how"><h3>How to play</h3><ol><li>Choose a municipal setting.</li><li>The clock starts when the scene appears.</li><li>Tap the differences you spot in <strong>Scene 2</strong>.</li><li>Find every risk to stop the clock.</li></ol><p class="small">Each difference represents an exposure that can contribute to injury, loss, disruption, or a claim.</p></div>
 </div>
 <div class="grid" id="sceneGrid"></div>
 </section>
 <section id="sGame" class="screen">
-<div class="gameHead"><div><h2 id="gameTitle"></h2><p>Find 8 risks. Tap the differences you spot in Scene 2.</p></div><div class="stats"><div class="stat"><b id="timer">0.00</b><span>seconds</span></div><div class="stat"><b id="count">0 / 8</b><span>risks found</span></div></div></div>
+<div class="gameHead"><div><h2 id="gameTitle"></h2><p id="gameInstruction">Find the risks. Tap the differences you spot in Scene 2.</p></div><div class="stats"><div class="stat"><b id="timer">0.00</b><span>seconds</span></div><div class="stat"><b id="count">0 / 0</b><span>risks found</span></div></div></div>
 <div class="progress"><div id="bar"></div></div>
 <div style="position:relative">
 <div class="board">
@@ -96,16 +96,21 @@ var scenes={
   ]
  },
  publicworks:{
-  name:"Public Works & Fleet Garage",thumb:"images/photoreal-v2/publicworks-risky.png",safe:"images/photoreal-v2/publicworks-safe.png",risky:"images/photoreal-v2/publicworks-risky.png",desc:"Fleet, equipment, shop safety, PPE, storage, and operational exposures.",
+  name:"Public Works & Fleet Garage",
+  thumb:"images/photoreal-v2/publicworks-risky.png",
+  safe:"images/photoreal-v2/publicworks-safe.png",
+  risky:"images/photoreal-v2/publicworks-risky.png",
+  desc:"Fleet, equipment, shop safety, PPE, storage, and operational exposures.",
   risks:[
-   {id:"pw-ppe-left",label:"Missing high-visibility PPE",detail:"The mechanic in the vehicle bay should be wearing appropriate high-visibility protective gear.",x:20.1,y:55.5,r:5.3,hint:"Compare the worker at the front-left of the truck between the two scenes."},
-   {id:"pw-spill",label:"Oil spill under the truck",detail:"Fluid leaks should be contained and cleaned right away.",x:35.2,y:76.8,r:5.5,hint:"Look directly under and just in front of the truck."},
-   {id:"pw-extinguisher",label:"Blocked fire extinguisher access",detail:"Emergency equipment must stay accessible at all times.",x:60.7,y:47.5,r:4.8,hint:"Find the fire extinguisher and check whether anything blocks access to it."},
-   {id:"pw-boxes",label:"Unstable stacked boxes",detail:"Materials stored overhead should be secured against falling.",x:76.6,y:24.2,r:5.2,hint:"Look high on the storage rack to the right of the truck."},
-   {id:"pw-chemicals",label:"Open chemical storage cabinet",detail:"Chemical storage should be controlled and containers kept secure.",x:72.9,y:54.4,r:5.0,hint:"Inspect the yellow storage cabinet."},
-   {id:"pw-ladder",label:"Unsecured ladder",detail:"Ladders should be stored and positioned safely.",x:92.8,y:31.4,r:4.8,hint:"Look at the orange ladder along the right wall."},
-   {id:"pw-ppe-right",label:"Missing PPE at workbench",detail:"Staff at the bench should use appropriate PPE for the task.",x:87.1,y:59.4,r:5.3,hint:"Compare the worker at the right-side workbench."},
-   {id:"pw-cord",label:"Cord across the floor",detail:"Cords stretched across the floor create a trip hazard in the bay.",x:66.6,y:88.3,r:5.6,hint:"Scan the floor from the right workbench across the front of the bay."}
+   {id:"pw-ppe-left",label:"Missing high-visibility PPE",detail:"The worker beside the truck should be wearing the appropriate high-visibility PPE for the work area.",x:17.0,y:55.5,r:4.8,hint:"Compare the worker standing beside the driver’s side of the truck."},
+   {id:"pw-ppe-rear",label:"Missing high-visibility PPE at shelving",detail:"The worker behind the truck is also missing the high-visibility PPE shown in Scene 1.",x:58.0,y:48.0,r:4.8,hint:"Look at the worker near the shelving behind the truck."},
+   {id:"pw-ppe-right",label:"Missing high-visibility PPE at workbench",detail:"The worker at the right-side workbench should be wearing the appropriate high-visibility PPE.",x:86.0,y:58.0,r:5.0,hint:"Compare the worker at the front-right workbench."},
+   {id:"pw-spill",label:"Fluid spill under the truck",detail:"A substantial fluid spill should be contained, cleaned, and investigated promptly.",x:35.0,y:78.0,r:5.4,hint:"Look directly under the front of the truck."},
+   {id:"pw-boxes",label:"Unstable overhead storage",detail:"The boxes stacked high on the shelving create a falling-object and storage hazard.",x:58.0,y:24.0,r:5.0,hint:"Look high on the shelving behind the truck."},
+   {id:"pw-extinguisher",label:"Obstructed fire extinguisher access",detail:"Emergency equipment should remain clearly visible and immediately accessible.",x:67.0,y:45.0,r:4.5,hint:"Look between the shelving and the green storage cabinet. Check access to the fire extinguisher."},
+   {id:"pw-chemicals",label:"Open flammable-materials cabinet",detail:"The flammable-materials storage cabinet should remain closed and secured when not actively in use.",x:75.0,y:53.0,r:5.2,hint:"Inspect the green flammable-materials storage cabinet."},
+   {id:"pw-ladder",label:"Unsafe ladder storage",detail:"The ladder has been repositioned in a way that creates a less secure storage condition.",x:84.0,y:27.0,r:4.8,hint:"Compare the orange ladder on the right wall."},
+   {id:"pw-cord",label:"Cord across the shop floor",detail:"A loose cord stretched through the work area creates a trip hazard.",x:54.0,y:88.0,r:5.6,hint:"Scan the floor between the truck and the right-side workbench."}
   ]
  },
  park:{
@@ -126,7 +131,7 @@ var hinted=new Set();
 var current=null,found=new Set(),start=0,elapsed=0,raf=0,filter="all";
 function $(q){return document.querySelector(q)}
 function show(id){document.querySelectorAll(".screen").forEach(function(x){x.classList.remove("active")});$(id).classList.add("active");window.scrollTo(0,0)}
-function cardHTML(k,s){return '<button class="card" data-scene="'+k+'"><div class="thumb"><img src="'+s.thumb+'" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></div><div class="cardBody"><h3>'+s.name+'</h3><p>'+s.desc+'</p></div></button>'}
+function cardHTML(k,s){return '<button class="card" data-scene="'+k+'"><div class="thumb"><img src="'+s.thumb+'" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></div><div class="cardBody"><h3>'+s.name+'</h3><p>'+s.desc+'</p><div class="small" style="margin-top:10px;font-weight:800;color:var(--navy)">'+s.risks.length+' risks to find</div></div></button>'}
 Object.keys(scenes).forEach(function(k){$("#sceneGrid").insertAdjacentHTML("beforeend",cardHTML(k,scenes[k]))});
 document.querySelectorAll("[data-scene]").forEach(function(b){b.addEventListener("click",function(){startScene(b.dataset.scene)})});
 function draw(k){
@@ -180,6 +185,7 @@ function startScene(k){
  hinted=new Set();
  elapsed=0;
  $("#gameTitle").textContent=scenes[k].name;
+ var instruction=$("#gameInstruction");if(instruction)instruction.textContent="Find "+scenes[k].risks.length+" risks. Tap the differences you spot in Scene 2.";
  $("#timer").textContent="0.00";
  $("#count").textContent="0 / "+scenes[k].risks.length;
  $("#bar").style.width="0";
