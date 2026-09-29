@@ -85,7 +85,17 @@ jobs:
             for t in tiles:
               sheet.paste(t,(0,yy)); yy+=t.height+8
             bio=io.BytesIO(); sheet.save(bio,"JPEG",quality=72,optimize=True)
-            report[name]={"meta":meta,"image":"data:image/jpeg;base64,"+base64.b64encode(bio.getvalue()).decode()}
+            # full-scene side-by-side reference
+            safe_full=safe.resize((800,450),Image.Resampling.LANCZOS)
+            risky_full=risky.resize((800,450),Image.Resampling.LANCZOS)
+            full=Image.new("RGB",(1616,484),"white")
+            full.paste(safe_full,(0,34)); full.paste(risky_full,(816,34))
+            fd=ImageDraw.Draw(full)
+            fd.text((8,8),"SAFE",fill="black"); fd.text((824,8),"RISKY",fill="black")
+            fb=io.BytesIO(); full.save(fb,"JPEG",quality=72,optimize=True)
+            report[name]={"meta":meta,
+                          "image":"data:image/jpeg;base64,"+base64.b64encode(bio.getvalue()).decode(),
+                          "full":"data:image/jpeg;base64,"+base64.b64encode(fb.getvalue()).decode()}
           os.makedirs("analysis",exist_ok=True)
           with open("analysis/contact.json","w") as f: json.dump(report,f)
           PY
