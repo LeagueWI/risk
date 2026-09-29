@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>League Insurance | Spot the Risk</title>\n<meta name="spot-risk-build" content="2026-09-28-publicworks-recalibrated-v5">
+<title>League Insurance | Spot the Risk</title>\n<meta name="spot-risk-build" content="2026-09-29-all-scenes-calibrated-v6">
 <style>
 :root{--navy:#12324a;--blue:#1f5d86;--teal:#2b7a78;--ink:#16212a;--muted:#64727d;--line:#d8e0e5;--bg:#f4f7f8;--good:#287a52}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}
@@ -43,12 +43,17 @@ h2{margin:10px 0}.heroCopy h2{font-size:clamp(2.2rem,5vw,4.2rem);line-height:.95
 .hintbtn:disabled{opacity:.48;cursor:default}
 .hintmsg{margin-top:10px;min-height:24px;padding:10px 12px;border-radius:9px;background:#f4f8fa;color:#334651;font-size:.92rem;line-height:1.4}
 @media(max-width:900px){.card,.cardBody{min-height:190px}}
+
+.brandLogoWrap{background:#fff;border-radius:10px;padding:6px 10px;display:flex;align-items:center}
+.brandLogo{display:block;width:180px;height:auto}
+.brandTag{margin:0;font-size:.82rem;opacity:.86;max-width:150px;line-height:1.25}
+@media(max-width:900px){.brandLogo{width:148px}.brandTag{display:none}}
 </style>
 </head>
 <body>
 <div class="app">
 <header>
-<div class="brand"><div class="mark">LI</div><div><h1>League Insurance</h1><p>Municipal risk, made visible.</p></div></div>
+<div class="brand"><div class="brandLogoWrap"><img class="brandLogo" src="images/league-insurance-logo.svg" alt="League Insurance"></div><p class="brandTag">Municipal risk, made visible.</p></div>
 <div><button class="topbtn" id="leaders">Daily leaderboard</button> <button class="topbtn" id="home">Choose scene</button></div>
 </header>
 <main>
@@ -83,16 +88,18 @@ h2{margin:10px 0}.heroCopy h2{font-size:clamp(2.2rem,5vw,4.2rem);line-height:.95
 <script>
 var scenes={
  cityhall:{
-  name:"City Hall & Municipal Office",thumb:"images/photoreal-v2/cityhall-risky.png",safe:"images/photoreal-v2/cityhall-safe.png",risky:"images/photoreal-v2/cityhall-risky.png",desc:"Public access, records, office safety, facilities, and everyday administrative risk.",
+  name:"City Hall & Municipal Office",
+  thumb:"images/photoreal-v2/cityhall-risky.png",
+  safe:"images/photoreal-v2/cityhall-safe.png",
+  risky:"images/photoreal-v2/cityhall-risky.png",
+  desc:"Public access, office safety, facilities, and everyday administrative risk.",
   risks:[
-   {id:"ch-power",label:"Power strip and loose cords",detail:"Temporary cords and overloaded strips create both trip and electrical exposure.",x:10.4,y:56.6,r:5.3,hint:"Look low on the left side of the reception desk, where several devices meet the floor."},
-   {id:"ch-workstation",label:"Unlocked workstation",detail:"Leaving a workstation open can expose systems and confidential information.",x:26.8,y:36.7,r:4.6,hint:"Compare the computer screens at the reception counter."},
-   {id:"ch-visitor",label:"Unauthorized visitor behind the desk",detail:"Public access to staff-only areas should be controlled.",x:43.8,y:32.4,r:5.0,hint:"One person is standing somewhere visitors normally should not be."},
-   {id:"ch-files",label:"Confidential files left out",detail:"Sensitive records should not be left visible on the counter.",x:44.7,y:42.4,r:4.3,hint:"Look across the top of the reception counter for information left in view."},
-   {id:"ch-drawer",label:"Open file drawer",detail:"Open drawers create strike and trip hazards.",x:76.6,y:47.9,r:4.8,hint:"Check the filing cabinet on the right side of the room."},
-   {id:"ch-boxes",label:"Boxes stacked by the entrance",detail:"Stored materials can obstruct movement and emergency egress.",x:93.1,y:54.5,r:5.2,hint:"Look at the path around the entrance door."},
-   {id:"ch-cable",label:"Cable across the floor",detail:"A loose cable across a walking surface is a clear trip hazard.",x:54.8,y:72.4,r:5.5,hint:"Scan the open walking area in front of the reception desk."},
-   {id:"ch-spill",label:"Wet floor without warning",detail:"Unmarked spills can quickly lead to slips and falls.",x:82.5,y:75.3,r:6.2,hint:"Look at the floor on the right side of the waiting area."}
+   {id:"ch-visitor",label:"Unauthorized person behind the counter",detail:"Public access to staff-only work areas should be controlled.",anchors:[{x:39.8,y:32.4,r:5.8}],hint:"Compare the area behind the reception counter. Someone is standing where the public normally should not be."},
+   {id:"ch-drawer",label:"Open cabinet drawer",detail:"An open drawer projects into a circulation area and creates a strike and trip exposure.",anchors:[{x:64.3,y:46.6,r:6.8}],hint:"Look at the low cabinet near the entrance and compare whether everything is closed."},
+   {id:"ch-boxes",label:"Boxes obstructing the entrance area",detail:"Stored materials near an entrance can interfere with movement and emergency egress.",anchors:[{x:95.2,y:42.3,r:7.2}],hint:"Check the far-right entrance area for something that narrows the clear path."},
+   {id:"ch-power",label:"Unsafe temporary power setup",detail:"A power strip and loose plugs at floor level create both electrical and trip exposure.",anchors:[{x:8.0,y:75.0,r:5.5},{x:10.1,y:86.8,r:6.8}],hint:"Look along the lower-left wall and floor for a temporary electrical setup."},
+   {id:"ch-cable",label:"Cord across the walking area",detail:"A cord stretched across an open walking surface creates a preventable trip hazard.",anchors:[{x:31.6,y:82.0,r:7.2},{x:46.0,y:80.0,r:7.2},{x:61.2,y:76.0,r:7.2}],hint:"Scan the open floor from the left wall toward the entrance mat."},
+   {id:"ch-spill",label:"Wet floor without warning",detail:"An unmarked spill in a public walking area can quickly lead to a slip-and-fall claim.",anchors:[{x:76.2,y:85.1,r:8.2}],hint:"Look at the floor near the right-side seating area."}
   ]
  },
  publicworks:{
@@ -114,18 +121,21 @@ var scenes={
   ]
  },
  park:{
-  name:"Park & Community Event",thumb:"images/photoreal-v2/park-risky.png",safe:"images/photoreal-v2/park-safe.png",risky:"images/photoreal-v2/park-risky.png",desc:"Public spaces, recreation, events, pedestrian flow, and facility exposures.",
+  name:"Park & Community Event",
+  thumb:"images/photoreal-v2/park-risky.png",
+  safe:"images/photoreal-v2/park-safe.png",
+  risky:"images/photoreal-v2/park-risky.png",
+  desc:"Public spaces, recreation, events, pedestrian flow, and temporary operations.",
   risks:[
-   {id:"pk-barrier",label:"Fallen crowd-control barrier",detail:"Loose barricades can create trip hazards and poor event control.",x:10.3,y:48.7,r:5.2,hint:"Look along the left edge of the event setup near the landscaping."},
-   {id:"pk-boxes",label:"Loose boxes around the event table",detail:"Supplies left in walking areas create unnecessary clutter and trip risk.",x:35.1,y:68.4,r:5.1,hint:"Check the ground around the blue-covered event table."},
-   {id:"pk-case",label:"Open equipment case and scattered gear",detail:"Equipment should be closed, secured, and kept out of circulation paths.",x:50.9,y:65.1,r:4.8,hint:"Look just to the right of the event table for an open container."},
-   {id:"pk-bottles",label:"Water bottles on the grass",detail:"Loose items in the event area contribute to trip and housekeeping issues.",x:57.1,y:69.1,r:4.0,hint:"Scan the grass between the event setup and the walkway for small loose items."},
-   {id:"pk-cord",label:"Extension cord across the walkway",detail:"Cables crossing a public path need protection or rerouting.",x:63.1,y:86.0,r:5.2,hint:"Follow the curved pedestrian path in the foreground."},
-   {id:"pk-slide",label:"Damaged playground slide",detail:"Broken playground equipment should be removed from service immediately.",x:89.4,y:46.2,r:5.0,hint:"Inspect the playground slide carefully."},
-   {id:"pk-tent",label:"Unsecured event setup",detail:"A tent and event area should be fully secured and organized.",x:24.6,y:48.3,r:5.0,hint:"Look at how the canopy is secured near the ground."},
-   {id:"pk-staging",label:"Cluttered utility staging area",detail:"Poor staging around the service truck can obstruct operations and public safety.",x:75.0,y:49.6,r:5.5,hint:"Check the work area around the utility truck and traffic cones."}
+   {id:"pk-barrier",label:"Fallen crowd-control barrier",detail:"A fallen barrier creates a trip hazard and weakens event-area control.",anchors:[{x:11.7,y:78.6,r:8.0},{x:16.0,y:73.0,r:7.0}],hint:"Look on the grass at the front-left edge of the event setup."},
+   {id:"pk-boxes",label:"Loose supplies around the event table",detail:"Boxes and supplies left in circulation areas create clutter and trip exposure.",anchors:[{x:24.7,y:64.8,r:7.2}],hint:"Check the ground between the event table and the sidewalk sign."},
+   {id:"pk-equipment",label:"Open equipment in the pedestrian area",detail:"Open cases and coiled cables should be secured and kept out of public travel paths.",anchors:[{x:39.0,y:65.0,r:7.0},{x:43.1,y:66.6,r:7.5},{x:47.0,y:68.0,r:6.5}],hint:"Look at the sidewalk just beyond the event sign. Equipment has been set directly in the pedestrian area."},
+   {id:"pk-cord",label:"Extension cord across the walkway",detail:"A temporary cord crossing a public walkway should be rerouted or properly protected.",anchors:[{x:43.6,y:83.8,r:7.5},{x:55.0,y:81.5,r:7.5},{x:64.3,y:79.9,r:7.5},{x:76.1,y:78.4,r:7.5}],hint:"Follow the main sidewalk across the lower half of Scene 2."},
+   {id:"pk-staging",label:"Cluttered utility work zone",detail:"Tools, containers, and loose equipment around a municipal work vehicle should be staged and controlled.",anchors:[{x:81.5,y:58.0,r:7.5},{x:87.0,y:62.0,r:7.5}],hint:"Check the ground around the municipal utility truck. The work zone is much less controlled in Scene 2."},
+   {id:"pk-slide",label:"Unsecured playground equipment in the work zone",detail:"Large equipment should not be left leaning unsecured in an active public work area.",anchors:[{x:92.0,y:47.0,r:7.2}],hint:"Look immediately to the right of the utility truck for a large piece of equipment that is not there in Scene 1."}
   ]
  },
+
 };
 var hinted=new Set();
 var current=null,found=new Set(),start=0,elapsed=0,raf=0,filter="all";
@@ -134,6 +144,10 @@ function show(id){document.querySelectorAll(".screen").forEach(function(x){x.cla
 function cardHTML(k,s){return '<button class="card" data-scene="'+k+'"><div class="thumb"><img src="'+s.thumb+'" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></div><div class="cardBody"><h3>'+s.name+'</h3><p>'+s.desc+'</p><div class="small" style="margin-top:10px;font-weight:800;color:var(--navy)">'+s.risks.length+' risks to find</div></div></button>'}
 Object.keys(scenes).forEach(function(k){$("#sceneGrid").insertAdjacentHTML("beforeend",cardHTML(k,scenes[k]))});
 document.querySelectorAll("[data-scene]").forEach(function(b){b.addEventListener("click",function(){startScene(b.dataset.scene)})});
+function riskAnchors(r){
+ if(r.anchors&&r.anchors.length)return r.anchors;
+ return [{x:r.x,y:r.y,r:r.r}];
+}
 function draw(k){
  $("#safe").src=scenes[k].safe;
  $("#risky").src=scenes[k].risky;
@@ -142,40 +156,35 @@ function draw(k){
  layer.onclick=function(e){
    if(!current)return;
    var rect=layer.getBoundingClientRect();
-   var x=(e.clientX-rect.left)/rect.width*100;
-   var y=(e.clientY-rect.top)/rect.height*100;
    var tapX=e.clientX-rect.left;
    var tapY=e.clientY-rect.top;
-   var candidates=scenes[current].risks
+   var candidates=[];
+   scenes[current].risks
      .filter(function(r){return !found.has(r.id)})
-     .map(function(r){
-       var targetX=(r.x/100)*rect.width;
-       var targetY=(r.y/100)*rect.height;
-       var dx=tapX-targetX;
-       var dy=tapY-targetY;
-       var d=Math.sqrt(dx*dx+dy*dy);
-
-       // Booth-friendly target size:
-       // - at least 54px radius for reliable finger taps
-       // - scales up with the rendered scene width
-       // - individual risk radius can still enlarge larger objects
-       var proportional=(r.r/100)*rect.width;
-       var hitRadius=Math.max(54, proportional*1.55);
-
-       return {risk:r,d:d,hitRadius:hitRadius};
-     })
-     .filter(function(o){return o.d<=o.hitRadius})
-     .sort(function(a,b){return a.d-b.d});
-   if(candidates.length)hit(candidates[0].risk.id);
+     .forEach(function(r){
+       riskAnchors(r).forEach(function(a){
+         var targetX=(a.x/100)*rect.width;
+         var targetY=(a.y/100)*rect.height;
+         var dx=tapX-targetX;
+         var dy=tapY-targetY;
+         var d=Math.sqrt(dx*dx+dy*dy);
+         var proportional=((a.r||5)/100)*rect.width;
+         var hitRadius=Math.max(58,proportional*1.55);
+         if(d<=hitRadius)candidates.push({risk:r,anchor:a,d:d});
+       });
+     });
+   candidates.sort(function(a,b){return a.d-b.d});
+   if(candidates.length)hit(candidates[0].risk.id,candidates[0].anchor);
  };
 }
-function renderFoundMarker(risk){
+function renderFoundMarker(risk,anchor){
  var layer=$("#hits");
+ var a=anchor||riskAnchors(risk)[0];
  var m=document.createElement("div");
  m.className="foundMarker";
  m.dataset.riskId=risk.id;
- m.style.left=risk.x+"%";
- m.style.top=risk.y+"%";
+ m.style.left=a.x+"%";
+ m.style.top=a.y+"%";
  layer.appendChild(m);
 }
 function startScene(k){
@@ -199,12 +208,12 @@ function startScene(k){
 function tick(){elapsed=(performance.now()-start)/1000;$("#timer").textContent=elapsed.toFixed(2);raf=requestAnimationFrame(tick)}
 var tt=0;
 function toast(t){$("#toast").textContent=t;$("#toast").classList.add("show");clearTimeout(tt);tt=setTimeout(function(){$("#toast").classList.remove("show")},900)}
-function hit(riskId){
+function hit(riskId,anchor){
  if(found.has(riskId))return;
  var risk=scenes[current].risks.find(function(r){return r.id===riskId});
  if(!risk)return;
  found.add(riskId);
- renderFoundMarker(risk);
+ renderFoundMarker(risk,anchor);
  toast(risk.label);
  $("#count").textContent=found.size+" / "+scenes[current].risks.length;
  $("#bar").style.width=(found.size/scenes[current].risks.length*100)+"%";
