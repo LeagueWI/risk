@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>League Insurance | Spot the Risk</title>\n<meta name="spot-risk-build" content="2026-09-29-all-scenes-calibrated-v6">
+<title>League Insurance | Spot the Risk</title>\n<meta name="spot-risk-build" content="2026-09-29-hint-queue-v7">
 <style>
 :root{--navy:#12324a;--blue:#1f5d86;--teal:#2b7a78;--ink:#16212a;--muted:#64727d;--line:#d8e0e5;--bg:#f4f7f8;--good:#287a52}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}
@@ -138,6 +138,8 @@ var scenes={
 
 };
 var hinted=new Set();
+var hintQueue=[];
+var hintNumber=0;
 var current=null,found=new Set(),start=0,elapsed=0,raf=0,filter="all";
 function $(q){return document.querySelector(q)}
 function show(id){document.querySelectorAll(".screen").forEach(function(x){x.classList.remove("active")});$(id).classList.add("active");window.scrollTo(0,0)}
@@ -187,19 +189,30 @@ function renderFoundMarker(risk,anchor){
  m.style.top=a.y+"%";
  layer.appendChild(m);
 }
+function buildHintQueue(k){
+ var ids=scenes[k].risks.map(function(r){return r.id});
+ // Fisher-Yates shuffle once per round. The order is then fixed for that round.
+ for(var i=ids.length-1;i>0;i--){
+   var j=Math.floor(Math.random()*(i+1));
+   var tmp=ids[i];ids[i]=ids[j];ids[j]=tmp;
+ }
+ return ids;
+}
 function startScene(k){
  cancelAnimationFrame(raf);
  current=k;
  found=new Set();
  hinted=new Set();
+ hintQueue=buildHintQueue(k);
+ hintNumber=0;
  elapsed=0;
  $("#gameTitle").textContent=scenes[k].name;
  var instruction=$("#gameInstruction");if(instruction)instruction.textContent="Find "+scenes[k].risks.length+" risks. Tap the differences you spot in Scene 2.";
  $("#timer").textContent="0.00";
  $("#count").textContent="0 / "+scenes[k].risks.length;
  $("#bar").style.width="0";
- document.querySelectorAll(".hintbtn").forEach(function(b){b.disabled=false});
- var hm=$("#hintMsg"); if(hm)hm.textContent="Need a clue? You have three hints for this round.";
+ document.querySelectorAll(".hintbtn").forEach(function(b,i){b.disabled=false;b.setAttribute("aria-label","Use hint "+(i+1)+" of 3");});
+ var hm=$("#hintMsg"); if(hm)hm.textContent="Need a clue? You have three hints for this round. Each hint will point to a different unfound risk.";
  draw(k);
  show("#sGame");
  start=performance.now();
@@ -239,20 +252,36 @@ function key(){return"leagueSpotRiskScores_v1"}function day(){var d=new Date();r
 function scores(){try{return JSON.parse(localStorage.getItem(key())||"[]")}catch(e){return[]}}
 function esc(v){return String(v).replace(/[&<>'"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]})}
 function useHint(button){
- if(!current)return;
- var unfound=scenes[current].risks.filter(function(r){return !found.has(r.id)});
- if(!unfound.length){
-   var done=$("#hintMsg"); if(done)done.textContent="You found every risk.";
-   button.disabled=true;
+ if(!current||button.disabled)return;
+
+ // Disable immediately so a double tap cannot issue two clues through one button.
+ button.disabled=true;
+
+ var risk=null;
+ while(hintQueue.length && !risk){
+   var nextId=hintQueue.shift();
+
+   // A risk already found or already hinted is skipped permanently.
+   if(found.has(nextId) || hinted.has(nextId))continue;
+
+   var candidate=scenes[current].risks.find(function(r){return r.id===nextId});
+   if(candidate)risk=candidate;
+ }
+
+ var hm=$("#hintMsg");
+
+ if(!risk){
+   if(hm)hm.textContent="No additional unfound risks are available for a new hint.";
    return;
  }
- var fresh=unfound.filter(function(r){return !hinted.has(r.id)});
- var pool=fresh.length?fresh:unfound;
- var risk=pool[Math.floor(Math.random()*pool.length)];
+
  hinted.add(risk.id);
- button.disabled=true;
- var hm=$("#hintMsg");
- if(hm)hm.textContent=risk.hint+" ("+unfound.length+" risks remain.)";
+ hintNumber+=1;
+
+ var remaining=scenes[current].risks.filter(function(r){return !found.has(r.id)}).length;
+ if(hm){
+   hm.textContent="Hint "+hintNumber+": "+risk.hint+" ("+remaining+" risks remain.)";
+ }
 }
 document.querySelectorAll(".hintbtn").forEach(function(b){
  b.addEventListener("click",function(){useHint(b)});
