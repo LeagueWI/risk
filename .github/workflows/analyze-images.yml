@@ -6,6 +6,9 @@ on:
       - 'images/photoreal-v2/**'
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   analyze:
     runs-on: ubuntu-latest
@@ -15,84 +18,81 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install pillow numpy opencv-python-headless
-      - name: Analyze scene differences
+      - name: Build visual difference contact sheets
         run: |
           python - <<'PY'
-          from PIL import Image
-          import numpy as np, cv2, json
+          from PIL import Image, ImageDraw, ImageFont
+          import numpy as np, cv2, json, base64, io, os
 
-          scenes = {
-            "cityhall": {
-              "safe":"images/photoreal-v2/cityhall-safe.png",
-              "risky":"images/photoreal-v2/cityhall-risky.png",
-              "old":[
-                ("power",10.4,56.6),("workstation",26.8,36.7),("visitor",43.8,32.4),("files",44.7,42.4),
-                ("drawer",76.6,47.9),("boxes",93.1,54.5),("cable",54.8,72.4),("spill",82.5,75.3)
-              ]
-            },
-            "publicworks": {
-              "safe":"images/photoreal-v2/publicworks-safe.png",
-              "risky":"images/photoreal-v2/publicworks-risky.png",
-              "old":[
-                ("ppe-left",17.0,55.5),("ppe-rear",58.0,48.0),("ppe-right",86.0,58.0),("spill",35.0,78.0),
-                ("boxes",58.0,24.0),("extinguisher",67.0,45.0),("chemicals",75.0,53.0),("ladder",84.0,27.0),("cord",54.0,88.0)
-              ]
-            },
-            "park": {
-              "safe":"images/photoreal-v2/park-safe.png",
-              "risky":"images/photoreal-v2/park-risky.png",
-              "old":[
-                ("barrier",10.3,48.7),("boxes",35.1,68.4),("case",50.9,65.1),("bottles",57.1,69.1),
-                ("cord",63.1,86.0),("slide",89.4,46.2),("tent",24.6,48.3),("staging",75.0,49.6)
-              ]
-            }
+          pairs = {
+            "cityhall":("images/photoreal-v2/cityhall-safe.png","images/photoreal-v2/cityhall-risky.png"),
+            "park":("images/photoreal-v2/park-safe.png","images/photoreal-v2/park-risky.png")
           }
 
-          def analyze(name, cfg):
-            a=np.array(Image.open(cfg["safe"]).convert("RGB"))
-            b=np.array(Image.open(cfg["risky"]).convert("RGB"))
-            h,w=a.shape[:2]
-            # align risky to safe with ECC affine on grayscale to compensate tiny generation shifts
-            ga=cv2.cvtColor(a,cv2.COLOR_RGB2GRAY).astype(np.float32)/255
-            gb=cv2.cvtColor(b,cv2.COLOR_RGB2GRAY).astype(np.float32)/255
+          def components(a,b):
+            A=np.array(a.convert("RGB")); B=np.array(b.convert("RGB"))
+            h,w=A.shape[:2]
+            ga=cv2.cvtColor(A,cv2.COLOR_RGB2GRAY).astype(np.float32)/255
+            gb=cv2.cvtColor(B,cv2.COLOR_RGB2GRAY).astype(np.float32)/255
             warp=np.eye(2,3,dtype=np.float32)
             try:
               _,warp=cv2.findTransformECC(ga,gb,warp,cv2.MOTION_AFFINE,
-                  (cv2.TERM_CRITERIA_EPS|cv2.TERM_CRITERIA_COUNT,100,1e-6))
-              bal=cv2.warpAffine(b,warp,(w,h),flags=cv2.INTER_LINEAR+cv2.WARP_INVERSE_MAP,borderMode=cv2.BORDER_REFLECT)
+                (cv2.TERM_CRITERIA_EPS|cv2.TERM_CRITERIA_COUNT,100,1e-6))
+              Bal=cv2.warpAffine(B,warp,(w,h),flags=cv2.INTER_LINEAR+cv2.WARP_INVERSE_MAP,borderMode=cv2.BORDER_REFLECT)
             except Exception:
-              bal=b
-            d=cv2.absdiff(a,bal)
-            score=d.mean(axis=2)
-            # threshold meaningful visual changes
+              Bal=B
+            score=cv2.absdiff(A,Bal).mean(axis=2)
             mask=(score>38).astype(np.uint8)*255
             mask=cv2.morphologyEx(mask,cv2.MORPH_OPEN,np.ones((3,3),np.uint8))
             mask=cv2.morphologyEx(mask,cv2.MORPH_CLOSE,np.ones((13,13),np.uint8))
             n,labels,stats,cent=cv2.connectedComponentsWithStats(mask,8)
-            comps=[]
+            out=[]
             for i in range(1,n):
               x,y,cw,ch,area=stats[i]
               if area<220: continue
               cx,cy=cent[i]
-              comps.append({
-                "area":int(area),"x":round(cx/w*100,1),"y":round(cy/h*100,1),
-                "w":round(cw/w*100,1),"h":round(ch/h*100,1),
-                "bbox":[round(x/w*100,1),round(y/h*100,1),round((x+cw)/w*100,1),round((y+ch)/h*100,1)]
-              })
-            comps=sorted(comps,key=lambda z:z["area"],reverse=True)[:20]
-            print("\nSCENE",name,"SIZE",w,h,"AFFINE",warp.tolist())
-            print("TOP_COMPONENTS",json.dumps(comps))
+              out.append((int(area),int(x),int(y),int(cw),int(ch),float(cx),float(cy)))
+            return sorted(out,reverse=True)[:10]
 
-            # For each expected old target, find strongest local 7%-radius patch mean within +/-18% scene coords
-            # using blurred diff score.
-            heat=cv2.GaussianBlur(score,(0,0),sigmaX=10,sigmaY=10)
-            for label,ox,oy in cfg["old"]:
-              x0=max(0,int((ox-18)/100*w)); x1=min(w,int((ox+18)/100*w))
-              y0=max(0,int((oy-18)/100*h)); y1=min(h,int((oy+18)/100*h))
-              crop=heat[y0:y1,x0:x1]
-              if crop.size==0: continue
-              _,mx,_,loc=cv2.minMaxLoc(crop.astype(np.float32))
-              px=x0+loc[0]; py=y0+loc[1]
-              print("TARGET",label,"OLD",ox,oy,"BEST",round(px/w*100,1),round(py/h*100,1),"SCORE",round(float(mx),1))
-          for n,cfg in scenes.items(): analyze(n,cfg)
+          report={}
+          for name,(sp,rp) in pairs.items():
+            safe=Image.open(sp).convert("RGB"); risky=Image.open(rp).convert("RGB")
+            w,h=safe.size
+            comps=components(safe,risky)
+            tiles=[]
+            meta=[]
+            for idx,(area,x,y,cw,ch,cx,cy) in enumerate(comps,1):
+              pad=35
+              x0=max(0,x-pad); y0=max(0,y-pad); x1=min(w,x+cw+pad); y1=min(h,y+ch+pad)
+              s=safe.crop((x0,y0,x1,y1)); r=risky.crop((x0,y0,x1,y1))
+              # normalize to same tile height
+              target_h=180
+              def resize(im):
+                ww=max(1,round(im.width*target_h/im.height))
+                return im.resize((ww,target_h),Image.Resampling.LANCZOS)
+              s=resize(s); r=resize(r)
+              tile=Image.new("RGB",(s.width+r.width+16,target_h+34),"white")
+              tile.paste(s,(0,34)); tile.paste(r,(s.width+16,34))
+              d=ImageDraw.Draw(tile)
+              d.text((6,8),f"{idx}: safe | risky   center {cx/w*100:.1f}%, {cy/h*100:.1f}%   area {area}",fill="black")
+              tiles.append(tile)
+              meta.append({"n":idx,"center":[round(cx/w*100,1),round(cy/h*100,1)],"bbox":[round(x/w*100,1),round(y/h*100,1),round((x+cw)/w*100,1),round((y+ch)/h*100,1)],"area":area})
+            # contact sheet, one tile per row for clarity
+            sheet_w=max(t.width for t in tiles)
+            sheet_h=sum(t.height+8 for t in tiles)
+            sheet=Image.new("RGB",(sheet_w,sheet_h),(235,238,240))
+            yy=0
+            for t in tiles:
+              sheet.paste(t,(0,yy)); yy+=t.height+8
+            bio=io.BytesIO(); sheet.save(bio,"JPEG",quality=72,optimize=True)
+            report[name]={"meta":meta,"image":"data:image/jpeg;base64,"+base64.b64encode(bio.getvalue()).decode()}
+          os.makedirs("analysis",exist_ok=True)
+          with open("analysis/contact.json","w") as f: json.dump(report,f)
           PY
+      - name: Commit analysis report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add analysis/contact.json
+          git commit -m "Update scene visual analysis" || exit 0
+          git push
