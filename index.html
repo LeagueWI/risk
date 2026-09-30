@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>League Insurance | Spot the Risk</title>\n<meta name="spot-risk-build" content="2026-09-29-brand-colors-v8">
+<title>League Insurance | Spot the Risk</title>\n<meta name="spot-risk-build" content="2026-09-29-no-hints-touch-v9">
 <style>
 :root{--navy:#1F3073;--blue:#1F3073;--teal:#FAAD14;--ink:#16212a;--muted:#64727d;--line:#d8e0e5;--bg:#f4f7f8;--good:#287a52}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}
@@ -22,7 +22,7 @@ h2{margin:10px 0}.heroCopy h2{font-size:clamp(2.2rem,5vw,4.2rem);line-height:.95
 .board{display:grid;grid-template-columns:1fr 1fr;gap:14px}.pane{position:relative;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#eef4f6}.label{position:absolute;z-index:3;top:12px;left:12px;background:#12324ae8;color:#fff;border-radius:999px;padding:7px 10px;font-size:.76rem;font-weight:800}
 .sceneimg{display:block;width:100%;height:auto;object-fit:contain}.hits{position:absolute;inset:0;z-index:4;cursor:crosshair;touch-action:manipulation}.foundMarker{position:absolute;transform:translate(-50%,-50%);width:46px;height:46px;border:3px solid #fff;border-radius:50%;background:#287a5255;box-shadow:0 0 0 4px #287a52d9;pointer-events:none}
 .toast{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:#132b3c;color:#fff;padding:9px 12px;border-radius:9px;font-weight:700;opacity:0;transition:.18s;z-index:6}.toast.show{opacity:1}
-.hintbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.hintbtn{border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:9px;padding:10px 13px;font-weight:800}.hintbtn:disabled{opacity:.48;cursor:default}.hintmsg{margin-top:10px;min-height:24px;padding:10px 12px;border-radius:9px;background:#f4f8fa;color:#334651;font-size:.92rem;line-height:1.4}.footer{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:14px;color:var(--muted)}.btn{border:0;border-radius:9px;padding:11px 15px;font-weight:800}.primary{background:var(--blue);color:#fff}.secondary{background:#edf3f5;color:var(--navy)}
+.footer{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:14px;color:var(--muted)}.btn{border:0;border-radius:9px;padding:11px 15px;font-weight:800}.primary{background:var(--blue);color:#fff}.secondary{background:#edf3f5;color:var(--navy)}
 .results{display:grid;grid-template-columns:.9fr 1.1fr;gap:20px}.panel{border:1px solid var(--line);border-radius:16px;padding:24px;background:#fff}.bigtime{font-size:3.5rem;font-weight:900;color:var(--navy);line-height:1;margin:12px 0}
 .entry{display:flex;gap:8px;margin-top:16px}.entry input{flex:1;min-width:0;border:1px solid var(--line);border-radius:8px;padding:11px;font-size:16px}
 .risks{display:grid;gap:8px;margin-top:16px}.risk{display:flex;gap:10px;padding:10px;background:#f7fafb;border-radius:9px}.dot{width:22px;height:22px;border-radius:50%;background:var(--good);color:#fff;display:grid;place-items:center;flex:0 0 auto;font-weight:900}.small{font-size:.82rem;color:var(--muted);line-height:1.45}
@@ -38,10 +38,10 @@ h2{margin:10px 0}.heroCopy h2{font-size:clamp(2.2rem,5vw,4.2rem);line-height:.95
 .cardBody{position:relative;z-index:2;min-height:220px;padding:24px;display:flex;flex-direction:column;justify-content:flex-end;pointer-events:none}
 .cardBody h3{margin:0 0 8px;color:var(--ink);font-size:1.25rem;line-height:1.15;text-shadow:0 1px 0 #fff}
 .cardBody p{margin:0;color:#2f404b;line-height:1.5;font-weight:650;text-shadow:0 1px 0 #fff}
-.hintbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.hintbtn{border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:9px;padding:10px 13px;font-weight:800}
-.hintbtn:disabled{opacity:.48;cursor:default}
-.hintmsg{margin-top:10px;min-height:24px;padding:10px 12px;border-radius:9px;background:#f4f8fa;color:#334651;font-size:.92rem;line-height:1.4}
+
+
+
+
 @media(max-width:900px){.card,.cardBody{min-height:190px}}
 
 .brandLogoWrap{background:#fff;border-radius:10px;padding:6px 10px;display:flex;align-items:center}
@@ -64,7 +64,7 @@ h2{margin:10px 0}.heroCopy h2{font-size:clamp(2.2rem,5vw,4.2rem);line-height:.95
 <div class="grid" id="sceneGrid"></div>
 </section>
 <section id="sGame" class="screen">
-<div class="gameHead"><div><h2 id="gameTitle"></h2><p id="gameInstruction">Find the risks. Tap the differences you spot in Scene 2.</p></div><div class="stats"><div class="stat"><b id="timer">0.00</b><span>seconds</span></div><div class="stat"><b id="count">0 / 0</b><span>risks found</span></div></div></div>
+<div class="gameHead"><div><h2 id="gameTitle"></h2><p id="gameInstruction">Find the risks. Tap each risk you spot in Scene 2.</p></div><div class="stats"><div class="stat"><b id="timer">0.00</b><span>seconds</span></div><div class="stat"><b id="count">0</b><span>risks remaining</span></div></div></div>
 <div class="progress"><div id="bar"></div></div>
 <div style="position:relative">
 <div class="board">
@@ -72,7 +72,6 @@ h2{margin:10px 0}.heroCopy h2{font-size:clamp(2.2rem,5vw,4.2rem);line-height:.95
 <div class="pane"><div class="label">Scene 2 • Tap here</div><img id="risky" class="sceneimg" alt="Municipal scene 2"><div class="hits" id="hits"></div></div>
 </div><div class="toast" id="toast"></div>
 </div>
-<div class="hintbar"><button type="button" class="hintbtn">Hint 1</button><button type="button" class="hintbtn">Hint 2</button><button type="button" class="hintbtn">Hint 3</button></div><div class="hintmsg" id="hintMsg" aria-live="polite">Need a clue? You have three hints for this round.</div>
 <div class="footer"><div>Look for changes in access, walking surfaces, equipment, storage, people, and work practices.</div><button class="btn secondary" id="restart">Restart scene</button></div>
 </section>
 <section id="sResult" class="screen">
@@ -93,12 +92,12 @@ var scenes={
   risky:"images/photoreal-v2/cityhall-risky.png",
   desc:"Public access, office safety, facilities, and everyday administrative risk.",
   risks:[
-   {id:"ch-visitor",label:"Unauthorized person behind the counter",detail:"Public access to staff-only work areas should be controlled.",anchors:[{x:39.8,y:32.4,r:5.8}],hint:"Compare the area behind the reception counter. Someone is standing where the public normally should not be."},
-   {id:"ch-drawer",label:"Open cabinet drawer",detail:"An open drawer projects into a circulation area and creates a strike and trip exposure.",anchors:[{x:64.3,y:46.6,r:6.8}],hint:"Look at the low cabinet near the entrance and compare whether everything is closed."},
-   {id:"ch-boxes",label:"Boxes obstructing the entrance area",detail:"Stored materials near an entrance can interfere with movement and emergency egress.",anchors:[{x:95.2,y:42.3,r:7.2}],hint:"Check the far-right entrance area for something that narrows the clear path."},
-   {id:"ch-power",label:"Unsafe temporary power setup",detail:"A power strip and loose plugs at floor level create both electrical and trip exposure.",anchors:[{x:8.0,y:75.0,r:5.5},{x:10.1,y:86.8,r:6.8}],hint:"Look along the lower-left wall and floor for a temporary electrical setup."},
-   {id:"ch-cable",label:"Cord across the walking area",detail:"A cord stretched across an open walking surface creates a preventable trip hazard.",anchors:[{x:31.6,y:82.0,r:7.2},{x:46.0,y:80.0,r:7.2},{x:61.2,y:76.0,r:7.2}],hint:"Scan the open floor from the left wall toward the entrance mat."},
-   {id:"ch-spill",label:"Wet floor without warning",detail:"An unmarked spill in a public walking area can quickly lead to a slip-and-fall claim.",anchors:[{x:76.2,y:85.1,r:8.2}],hint:"Look at the floor near the right-side seating area."}
+   {id:"ch-visitor",label:"Unauthorized person behind the counter",detail:"Public access to staff-only work areas should be controlled.",anchors:[{x:38.5,y:30.5,r:7.2},{x:40.3,y:35.0,r:7.2}]},
+   {id:"ch-drawer",label:"Open cabinet drawer",detail:"An open drawer projects into a circulation area and creates a strike and trip exposure.",anchors:[{x:62.5,y:42.5,r:7.8},{x:66.5,y:48.5,r:7.8}]},
+   {id:"ch-boxes",label:"Boxes obstructing the entrance area",detail:"Stored materials near an entrance can interfere with movement and emergency egress.",anchors:[{x:94.0,y:36.0,r:8.0},{x:96.0,y:45.0,r:8.0},{x:96.0,y:52.0,r:8.0}]},
+   {id:"ch-power",label:"Unsafe temporary power setup",detail:"A power strip and loose plugs at floor level create both electrical and trip exposure.",anchors:[{x:8.0,y:76.0,r:7.0},{x:9.0,y:84.0,r:7.5},{x:11.5,y:88.0,r:7.5}]},
+   {id:"ch-cable",label:"Cord across the walking area",detail:"A cord stretched across an open walking surface creates a preventable trip hazard.",anchors:[{x:25.0,y:82.0,r:7.5},{x:34.0,y:82.0,r:7.5},{x:45.0,y:80.0,r:7.5},{x:56.0,y:77.5,r:7.5},{x:65.0,y:75.0,r:7.0}]},
+   {id:"ch-spill",label:"Wet floor without warning",detail:"An unmarked spill in a public walking area can quickly lead to a slip-and-fall claim.",anchors:[{x:72.0,y:84.0,r:8.5},{x:78.0,y:85.0,r:8.5},{x:82.0,y:86.0,r:8.0}]}
   ]
  },
  publicworks:{
@@ -108,15 +107,15 @@ var scenes={
   risky:"images/photoreal-v2/publicworks-risky.png",
   desc:"Fleet, equipment, shop safety, PPE, storage, and operational exposures.",
   risks:[
-   {id:"pw-ppe-left",label:"Missing high-visibility PPE",detail:"The worker beside the truck should be wearing the appropriate high-visibility PPE for the work area.",x:17.0,y:55.5,r:4.8,hint:"Compare the worker standing beside the driver’s side of the truck."},
-   {id:"pw-ppe-rear",label:"Missing high-visibility PPE at shelving",detail:"The worker behind the truck is also missing the high-visibility PPE shown in Scene 1.",x:58.0,y:48.0,r:4.8,hint:"Look at the worker near the shelving behind the truck."},
-   {id:"pw-ppe-right",label:"Missing high-visibility PPE at workbench",detail:"The worker at the right-side workbench should be wearing the appropriate high-visibility PPE.",x:86.0,y:58.0,r:5.0,hint:"Compare the worker at the front-right workbench."},
-   {id:"pw-spill",label:"Fluid spill under the truck",detail:"A substantial fluid spill should be contained, cleaned, and investigated promptly.",x:35.0,y:78.0,r:5.4,hint:"Look directly under the front of the truck."},
-   {id:"pw-boxes",label:"Unstable overhead storage",detail:"The boxes stacked high on the shelving create a falling-object and storage hazard.",x:58.0,y:24.0,r:5.0,hint:"Look high on the shelving behind the truck."},
-   {id:"pw-extinguisher",label:"Obstructed fire extinguisher access",detail:"Emergency equipment should remain clearly visible and immediately accessible.",x:67.0,y:45.0,r:4.5,hint:"Look between the shelving and the green storage cabinet. Check access to the fire extinguisher."},
-   {id:"pw-chemicals",label:"Open flammable-materials cabinet",detail:"The flammable-materials storage cabinet should remain closed and secured when not actively in use.",x:75.0,y:53.0,r:5.2,hint:"Inspect the green flammable-materials storage cabinet."},
-   {id:"pw-ladder",label:"Unsafe ladder storage",detail:"The ladder has been repositioned in a way that creates a less secure storage condition.",x:84.0,y:27.0,r:4.8,hint:"Compare the orange ladder on the right wall."},
-   {id:"pw-cord",label:"Cord across the shop floor",detail:"A loose cord stretched through the work area creates a trip hazard.",x:54.0,y:88.0,r:5.6,hint:"Scan the floor between the truck and the right-side workbench."}
+   {id:"pw-ppe-left",label:"Missing high-visibility PPE",detail:"The worker beside the truck should be wearing the appropriate high-visibility PPE for the work area.",anchors:[{x:14.5,y:47.0,r:7.2},{x:15.5,y:55.0,r:7.2}]},
+   {id:"pw-ppe-rear",label:"Missing high-visibility PPE at shelving",detail:"The worker behind the truck is also missing the high-visibility PPE shown in Scene 1.",anchors:[{x:58.0,y:44.0,r:7.0},{x:59.0,y:51.0,r:7.0}]},
+   {id:"pw-ppe-right",label:"Missing high-visibility PPE at workbench",detail:"The worker at the right-side workbench should be wearing the appropriate high-visibility PPE.",anchors:[{x:85.0,y:53.0,r:7.5},{x:87.0,y:61.0,r:7.5}]},
+   {id:"pw-spill",label:"Fluid spill under the truck",detail:"A substantial fluid spill should be contained, cleaned, and investigated promptly.",anchors:[{x:31.0,y:85.0,r:8.0},{x:37.0,y:87.0,r:8.5},{x:43.0,y:88.0,r:8.0}]},
+   {id:"pw-boxes",label:"Unstable overhead storage",detail:"The boxes stacked high on the shelving create a falling-object and storage hazard.",anchors:[{x:59.0,y:19.0,r:7.5},{x:63.0,y:24.0,r:7.5},{x:65.0,y:30.0,r:7.0}]},
+   {id:"pw-extinguisher",label:"Obstructed fire extinguisher access",detail:"Emergency equipment should remain clearly visible and immediately accessible.",anchors:[{x:65.0,y:40.0,r:7.0},{x:65.0,y:46.0,r:7.0}]},
+   {id:"pw-chemicals",label:"Open flammable-materials cabinet",detail:"The flammable-materials storage cabinet should remain closed and secured when not actively in use.",anchors:[{x:73.0,y:44.0,r:8.0},{x:76.0,y:52.0,r:8.0},{x:77.0,y:60.0,r:8.0}]},
+   {id:"pw-ladder",label:"Unsafe ladder storage",detail:"The ladder has been repositioned in a way that creates a less secure storage condition.",anchors:[{x:86.0,y:17.0,r:7.5},{x:87.0,y:26.0,r:7.5},{x:84.0,y:35.0,r:7.0}]},
+   {id:"pw-cord",label:"Cord across the shop floor",detail:"A loose cord stretched through the work area creates a trip hazard.",anchors:[{x:47.0,y:91.0,r:7.5},{x:55.0,y:93.0,r:7.5},{x:63.0,y:92.0,r:7.5},{x:69.0,y:88.0,r:7.0}]}
   ]
  },
  park:{
@@ -126,19 +125,15 @@ var scenes={
   risky:"images/photoreal-v2/park-risky.png",
   desc:"Public spaces, recreation, events, pedestrian flow, and temporary operations.",
   risks:[
-   {id:"pk-barrier",label:"Fallen crowd-control barrier",detail:"A fallen barrier creates a trip hazard and weakens event-area control.",anchors:[{x:11.7,y:78.6,r:8.0},{x:16.0,y:73.0,r:7.0}],hint:"Look on the grass at the front-left edge of the event setup."},
-   {id:"pk-boxes",label:"Loose supplies around the event table",detail:"Boxes and supplies left in circulation areas create clutter and trip exposure.",anchors:[{x:24.7,y:64.8,r:7.2}],hint:"Check the ground between the event table and the sidewalk sign."},
-   {id:"pk-equipment",label:"Open equipment in the pedestrian area",detail:"Open cases and coiled cables should be secured and kept out of public travel paths.",anchors:[{x:39.0,y:65.0,r:7.0},{x:43.1,y:66.6,r:7.5},{x:47.0,y:68.0,r:6.5}],hint:"Look at the sidewalk just beyond the event sign. Equipment has been set directly in the pedestrian area."},
-   {id:"pk-cord",label:"Extension cord across the walkway",detail:"A temporary cord crossing a public walkway should be rerouted or properly protected.",anchors:[{x:43.6,y:83.8,r:7.5},{x:55.0,y:81.5,r:7.5},{x:64.3,y:79.9,r:7.5},{x:76.1,y:78.4,r:7.5}],hint:"Follow the main sidewalk across the lower half of Scene 2."},
-   {id:"pk-staging",label:"Cluttered utility work zone",detail:"Tools, containers, and loose equipment around a municipal work vehicle should be staged and controlled.",anchors:[{x:81.5,y:58.0,r:7.5},{x:87.0,y:62.0,r:7.5}],hint:"Check the ground around the municipal utility truck. The work zone is much less controlled in Scene 2."},
-   {id:"pk-slide",label:"Unsecured playground equipment in the work zone",detail:"Large equipment should not be left leaning unsecured in an active public work area.",anchors:[{x:92.0,y:47.0,r:7.2}],hint:"Look immediately to the right of the utility truck for a large piece of equipment that is not there in Scene 1."}
+   {id:"pk-barrier",label:"Fallen crowd-control barrier",detail:"A fallen barrier creates a trip hazard and weakens event-area control.",anchors:[{x:8.0,y:78.0,r:8.0},{x:12.0,y:83.0,r:8.5},{x:17.0,y:87.0,r:8.5}]},
+   {id:"pk-boxes",label:"Loose supplies around the event table",detail:"Boxes and supplies left in circulation areas create clutter and trip exposure.",anchors:[{x:22.0,y:63.0,r:7.5},{x:27.0,y:65.0,r:7.5},{x:30.0,y:67.0,r:7.0}]},
+   {id:"pk-equipment",label:"Open equipment in the pedestrian area",detail:"Open cases and coiled cables should be secured and kept out of public travel paths.",anchors:[{x:37.0,y:63.0,r:8.0},{x:42.0,y:66.0,r:8.5},{x:47.0,y:68.0,r:8.0}]},
+   {id:"pk-cord",label:"Extension cord across the walkway",detail:"A temporary cord crossing a public walkway should be rerouted or properly protected.",anchors:[{x:37.0,y:84.0,r:7.5},{x:45.0,y:84.0,r:7.5},{x:54.0,y:82.0,r:7.5},{x:63.0,y:80.0,r:7.5},{x:72.0,y:79.0,r:7.5},{x:78.0,y:78.0,r:7.0}]},
+   {id:"pk-staging",label:"Cluttered utility work zone",detail:"Tools, containers, and loose equipment around a municipal work vehicle should be staged and controlled.",anchors:[{x:78.0,y:58.0,r:8.0},{x:84.0,y:62.0,r:8.5},{x:89.0,y:66.0,r:8.5}]},
+   {id:"pk-slide",label:"Unsecured playground equipment in the work zone",detail:"Large equipment should not be left leaning unsecured in an active public work area.",anchors:[{x:92.0,y:40.0,r:8.0},{x:94.0,y:48.0,r:8.0},{x:93.0,y:56.0,r:8.0}]}
   ]
  },
-
 };
-var hinted=new Set();
-var hintQueue=[];
-var hintNumber=0;
 var current=null,found=new Set(),start=0,elapsed=0,raf=0,filter="all";
 function $(q){return document.querySelector(q)}
 function show(id){document.querySelectorAll(".screen").forEach(function(x){x.classList.remove("active")});$(id).classList.add("active");window.scrollTo(0,0)}
@@ -170,7 +165,7 @@ function draw(k){
          var dy=tapY-targetY;
          var d=Math.sqrt(dx*dx+dy*dy);
          var proportional=((a.r||5)/100)*rect.width;
-         var hitRadius=Math.max(58,proportional*1.55);
+         var hitRadius=Math.max(74,proportional*1.75);
          if(d<=hitRadius)candidates.push({risk:r,anchor:a,d:d});
        });
      });
@@ -188,30 +183,16 @@ function renderFoundMarker(risk,anchor){
  m.style.top=a.y+"%";
  layer.appendChild(m);
 }
-function buildHintQueue(k){
- var ids=scenes[k].risks.map(function(r){return r.id});
- // Fisher-Yates shuffle once per round. The order is then fixed for that round.
- for(var i=ids.length-1;i>0;i--){
-   var j=Math.floor(Math.random()*(i+1));
-   var tmp=ids[i];ids[i]=ids[j];ids[j]=tmp;
- }
- return ids;
-}
 function startScene(k){
  cancelAnimationFrame(raf);
  current=k;
  found=new Set();
- hinted=new Set();
- hintQueue=buildHintQueue(k);
- hintNumber=0;
  elapsed=0;
  $("#gameTitle").textContent=scenes[k].name;
- var instruction=$("#gameInstruction");if(instruction)instruction.textContent="Find "+scenes[k].risks.length+" risks. Tap the differences you spot in Scene 2.";
+ var instruction=$("#gameInstruction");if(instruction)instruction.textContent="Find "+scenes[k].risks.length+" risks. Tap each risk you spot in Scene 2.";
  $("#timer").textContent="0.00";
- $("#count").textContent="0 / "+scenes[k].risks.length;
+ $("#count").textContent=scenes[k].risks.length;
  $("#bar").style.width="0";
- document.querySelectorAll(".hintbtn").forEach(function(b,i){b.disabled=false;b.setAttribute("aria-label","Use hint "+(i+1)+" of 3");});
- var hm=$("#hintMsg"); if(hm)hm.textContent="Need a clue? You have three hints for this round. Each hint will point to a different unfound risk.";
  draw(k);
  show("#sGame");
  start=performance.now();
@@ -227,7 +208,7 @@ function hit(riskId,anchor){
  found.add(riskId);
  renderFoundMarker(risk,anchor);
  toast(risk.label);
- $("#count").textContent=found.size+" / "+scenes[current].risks.length;
+ $("#count").textContent=scenes[current].risks.length-found.size;
  $("#bar").style.width=(found.size/scenes[current].risks.length*100)+"%";
  if(found.size===scenes[current].risks.length){
    cancelAnimationFrame(raf);
@@ -250,41 +231,6 @@ function results(){
 function key(){return"leagueSpotRiskScores_v1"}function day(){var d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function scores(){try{return JSON.parse(localStorage.getItem(key())||"[]")}catch(e){return[]}}
 function esc(v){return String(v).replace(/[&<>'"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]})}
-function useHint(button){
- if(!current||button.disabled)return;
-
- // Disable immediately so a double tap cannot issue two clues through one button.
- button.disabled=true;
-
- var risk=null;
- while(hintQueue.length && !risk){
-   var nextId=hintQueue.shift();
-
-   // A risk already found or already hinted is skipped permanently.
-   if(found.has(nextId) || hinted.has(nextId))continue;
-
-   var candidate=scenes[current].risks.find(function(r){return r.id===nextId});
-   if(candidate)risk=candidate;
- }
-
- var hm=$("#hintMsg");
-
- if(!risk){
-   if(hm)hm.textContent="No additional unfound risks are available for a new hint.";
-   return;
- }
-
- hinted.add(risk.id);
- hintNumber+=1;
-
- var remaining=scenes[current].risks.filter(function(r){return !found.has(r.id)}).length;
- if(hm){
-   hm.textContent="Hint "+hintNumber+": "+risk.hint+" ("+remaining+" risks remain.)";
- }
-}
-document.querySelectorAll(".hintbtn").forEach(function(b){
- b.addEventListener("click",function(){useHint(b)});
-});
 function saveScore(){var n=$("#name").value.trim().slice(0,24);if(!n){$("#name").focus();return}var a=scores();a.push({name:n,scene:current,time:Number(elapsed.toFixed(2)),date:day(),ts:Date.now()});localStorage.setItem(key(),JSON.stringify(a.slice(-500)));$("#save").disabled=true;$("#save").textContent="Score added";renderLeader("#leaderBody")}
 function today(){var a=scores().filter(function(x){return x.date===day()});if(filter!=="all")a=a.filter(function(x){return x.scene===filter});return a.sort(function(a,b){return a.time-b.time||a.ts-b.ts}).slice(0,10)}
 function renderTabs(sel){var e=$(sel);e.innerHTML="";var opts=[["all","Overall"]].concat(Object.keys(scenes).map(function(k){return[k,scenes[k].name]}));opts.forEach(function(o){var b=document.createElement("button");b.className="tab"+(filter===o[0]?" active":"");b.textContent=o[1];b.addEventListener("click",function(){filter=o[0];renderTabs(sel);renderLeader(sel==="#tabs"?"#leaderBody":"#modalBody")});e.appendChild(b)})}
