@@ -102,3 +102,5 @@ assert '2026-10-05-final-hotspots-v10' in s
 assert 'primaryMin=coarse?94:82' in s
 assert 'assistMin=coarse?132:112' in s
 assert 'clearWinner' in s
+
+# Touch this file to trigger the tuning workflow after the workflow itself was simplified.
