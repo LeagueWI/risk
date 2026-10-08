@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "League Insurance | Spot the Risk",
+  "short_name": "Spot the Risk",
+  "description": "Find the risks in municipal scenes.",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "fullscreen",
+  "background_color": "#f4f7f8",
+  "theme_color": "#1F3073",
+  "icons": [
+    {
+      "src": "./images/app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
