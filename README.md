@@ -16,7 +16,7 @@ Standalone conference booth activation for League Insurance.
 Publish from the main branch root in Settings > Pages.
 
 Expected URL:
-https://emilygenevaeagon.github.io/spot-the-risk/
+https://leaguewi.github.io/risk/
 
 ## Leaderboard note
 The current leaderboard is intentionally device-local. If multiple devices need to share one live leaderboard, the score storage should be moved to a shared backend such as Supabase or Firebase.
